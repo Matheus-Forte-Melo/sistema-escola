@@ -1,8 +1,17 @@
+#importar classes
+from gui_funcs import *
+
 def menu_aluno():
-    pass
+    # Se a seleção for confirmada ele abre o menu de login
+    menu_login()
+   
+    # aluno = Aluno()
+    # aluno.realizarLogin()
+    # print(f"{saudacoesTempo} {aluno.getNome()}")
+    
 
 def menu_professor():
-    pass
+    menu_login("Professor")
 
 def menu_administrador():
-    pass
+    menu_login("Administrador")
