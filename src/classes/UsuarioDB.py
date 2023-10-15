@@ -3,10 +3,10 @@ import mysql.connector
 
 class UsuarioDB:
     
-    def realizarLogin(self): 
+    def _realizarLogin(self): 
         pass
 
-    def iniciarConn(self):
+    def _iniciarConn(self):
         self._conn = mysql.connector.connect(
             user="root",
             password = "",
@@ -15,7 +15,7 @@ class UsuarioDB:
             )
         self._cursor = self._conn.cursor()
 
-    def fecharConn(self):
+    def _fecharConn(self):
         if self._conn is not None:
             self._conn.close()
             self._cursor.close()

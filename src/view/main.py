@@ -11,7 +11,7 @@ from functions import gui_funcs
 confirmado = False
 while not confirmado:
     usuario = gui_funcs.menuInicial()
-    confirmado = gui_funcs.confirmar()
+    confirmado = gui_funcs.confirmar(usuario)
 
 match usuario:
     case "Aluno":
@@ -20,6 +20,4 @@ match usuario:
         gui_users.menu_professor()
     case "Administrador":
         gui_users.menu_administrador()
-        
-
 
