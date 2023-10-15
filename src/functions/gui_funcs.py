@@ -51,18 +51,32 @@ def confirmar(usuario="Aluno") -> bool:
 # Menu de login que retorna senha e usuário
 def menu_login(usuario="Aluno") -> dict:
     if not confirmar(usuario):
-        exit("Perai")
+        pass
 
-    nome = inquirer.text(message="Digite seu nome completo:").execute()
-    senha = inquirer.secret(message="Digite sua senha:").execute()
-        
-        
-    
+    nome = inquirer.text(message="Qual o seu nome completo:").execute()
+    while True:        
+        senha = inquirer.secret(message="Qual a sua senha:").execute()
+        if valida_senha(senha):
+            break
+            
     credenciais = {'nome': nome, 'senha': senha}
     return credenciais  
 
 def valida_senha(senha):
-    assert len(senha) > 8, "Senha muito curta"
+    
+    tamanho = len(senha)
+    if tamanho < 8  or tamanho > 20:
+        print("\033[91m[!]\033[0m O tamanho da senha deve ter entre 8 a 20 caracteres.")
+        return False
+    
+    possui_char = any(char.isdigit() for char in senha)
+    possui_num = any(char.isalpha() for char in senha)
+    
+    if possui_char is False or possui_num is False:
+        print("\033[91m[!]\033[0m A senha deve possuir números e carácteres.")
+        return False
+    return True
+        
 
     
     

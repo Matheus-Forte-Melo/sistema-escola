@@ -6,11 +6,9 @@ from classes import Aluno
 from gui_funcs import *
 
 def menu_aluno():
-    menu_login("Aluno") 
+    while True: # Isso é um loop
+        credenciais = menu_login("Aluno") 
 
-
-    # print(f"{saudacoesTempo} {aluno.getNome()}")
-    
 
 def menu_professor():
     menu_login("Professor")
