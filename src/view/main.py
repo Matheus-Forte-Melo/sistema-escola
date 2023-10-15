@@ -5,7 +5,11 @@ path.append("src\\functions") # Por enquanto vai funcionar, mas creio que isso n
 from functions import gui_users
 from functions import gui_funcs
 
-usuario = gui_funcs.menuInicial()
+# Confirmação, talvez mude de lugar mais tarde
+confirmado = False
+while not confirmado:
+    usuario = gui_funcs.menuInicial()
+    confirmado = gui_funcs.confirmar()
 
 match usuario:
     case "Aluno":

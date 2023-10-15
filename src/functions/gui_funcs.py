@@ -17,8 +17,8 @@ def menuInicial() -> str:
     usuario = inquirer.select(
         message="Qual tipo de usuário você é: ",
         choices=["Aluno", "Professor", "Administrador"]).execute()
-    
-    return usuario
+
+    return usuario 
 
 def criarTabela(header: list, *colunas) -> AsciiTable:
     dados_tabela = []
@@ -49,10 +49,7 @@ def confirmar(usuario="Aluno") -> bool:
     return confirmacao
 
 # Menu de login que retorna senha e usuário
-def menu_login(usuario="Aluno") -> dict:
-    if not confirmar(usuario):
-        pass
-
+def menu_login() -> dict:
     nome = inquirer.text(message="Qual o seu nome completo:").execute()
     while True:        
         senha = inquirer.secret(message="Qual a sua senha:").execute()
@@ -62,8 +59,8 @@ def menu_login(usuario="Aluno") -> dict:
     credenciais = {'nome': nome, 'senha': senha}
     return credenciais  
 
+# Retorna True se a senha possuir entre 8 a 20 caracteres e se possuir carácteres e núemeros.
 def valida_senha(senha):
-    
     tamanho = len(senha)
     if tamanho < 8  or tamanho > 20:
         print("\033[91m[!]\033[0m O tamanho da senha deve ter entre 8 a 20 caracteres.")
@@ -71,16 +68,10 @@ def valida_senha(senha):
     
     possui_char = any(char.isdigit() for char in senha)
     possui_num = any(char.isalpha() for char in senha)
+    # Any -> Recebe um iterável e se uma condição for False retorna False, ao contrario, retorna True
     
     if possui_char is False or possui_num is False:
         print("\033[91m[!]\033[0m A senha deve possuir números e carácteres.")
         return False
     return True
-        
-
-    
-    
-    
-    
-
 

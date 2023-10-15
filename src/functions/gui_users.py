@@ -7,7 +7,8 @@ from gui_funcs import *
 
 def menu_aluno():
     while True: # Isso é um loop
-        credenciais = menu_login("Aluno") 
+        credenciais = menu_login() 
+        print("Estou num loop infinito")
 
 
 def menu_professor():
