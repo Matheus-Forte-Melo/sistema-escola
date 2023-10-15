@@ -1,12 +1,14 @@
-#importar classes
+# Modular classes mais tarde e importar elas por aqui, fica mais limpo
+from sys import path
+path.append("src"), path.append("src\\classes")
+
+from classes import Aluno
 from gui_funcs import *
 
 def menu_aluno():
-    # Se a seleção for confirmada ele abre o menu de login
-    menu_login()
-   
-    # aluno = Aluno()
-    # aluno.realizarLogin()
+    menu_login("Aluno") 
+
+
     # print(f"{saudacoesTempo} {aluno.getNome()}")
     
 

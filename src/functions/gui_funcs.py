@@ -1,4 +1,5 @@
 from InquirerPy import inquirer
+from InquirerPy import validator
 import pyfiglet
 from terminaltables import AsciiTable
 from datetime import date, datetime
@@ -38,17 +39,34 @@ def pegarDataTempo():
 def saudacoesTempo():
     pass
 
-def confirmar(usuario="aluno") -> bool:
+# Confirma se o usuário realmente quer fazer login
+def confirmar(usuario="Aluno") -> bool:
     confirmacao = inquirer.confirm(
         message=f"Deseja realizar login como: {usuario}",
         confirm_letter="s",
         reject_letter="n",
         transformer=lambda result: "Sim" if result else "Não").execute()
     return confirmacao
+
+# Menu de login que retorna senha e usuário
+def menu_login(usuario="Aluno") -> dict:
+    if not confirmar(usuario):
+        exit("Perai")
+
+    nome = inquirer.text(message="Digite seu nome completo:").execute()
+    senha = inquirer.secret(message="Digite sua senha:").execute()
+        
+        
     
-def menu_login(usuario="Aluno"):
-    if confirmar(usuario):
-        print("MENU DE LOGIN")
-    else:
-        print("RETORNANDO")
+    credenciais = {'nome': nome, 'senha': senha}
+    return credenciais  
+
+def valida_senha(senha):
+    assert len(senha) > 8, "Senha muito curta"
+
+    
+    
+    
+    
+
 
