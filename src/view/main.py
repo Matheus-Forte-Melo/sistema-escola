@@ -5,7 +5,9 @@ path.append("src\\functions") # Por enquanto vai funcionar, mas creio que isso n
 from functions import gui_users
 from functions import gui_funcs
 
-# Confirmação, talvez mude de lugar mais tarde
+# Confirmação, talvez mude de lugar mais tarde e transforme numa função
+
+
 confirmado = False
 while not confirmado:
     usuario = gui_funcs.menuInicial()

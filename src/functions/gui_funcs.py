@@ -1,5 +1,4 @@
 from InquirerPy import inquirer
-from InquirerPy import validator
 import pyfiglet
 from terminaltables import AsciiTable
 from datetime import date, datetime
@@ -7,6 +6,12 @@ from datetime import date, datetime
 
 def printarLinha(tamanho=20) -> str:
     print("="*tamanho)
+
+def printarFiglet(titulo) -> str:
+    ascii_art = pyfiglet.figlet_format(titulo, font="slant")
+    printarLinha(60)
+    print(ascii_art)
+    printarLinha(60)
 
 def menuInicial() -> str:
     ascii_art = pyfiglet.figlet_format("Sistema Escolar", font="slant")
@@ -31,13 +36,20 @@ def criarTabela(header: list, *colunas) -> AsciiTable:
 def printarTabela(tabela:AsciiTable) -> None:
     print(tabela.table)
 
-
-def pegarDataTempo():
-    data_tempo = (date.today(), datetime.today().time())
+# Pega data e hora e bota num dicionario
+def getDataTempo():
+    data_tempo = {'dia':date.today(),'horario':datetime.today().time().hour}
     return data_tempo
 
-def saudacoesTempo():
-    pass
+# Retorna uma saudação baseada no horário
+def saudacoesTempo(data_tempo:dict) -> str:
+    horario = data_tempo['horario']
+    if horario > 4 and horario < 12:
+        return "Bom dia"
+    elif horario > 12 and horario < 18:
+        return "Boa tarde"
+    else:
+        return "Boa noite"
 
 # Confirma se o usuário realmente quer fazer login
 def confirmar(usuario="Aluno") -> bool:
