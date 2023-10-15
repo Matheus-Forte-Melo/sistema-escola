@@ -60,7 +60,7 @@ def confirmar(usuario="Aluno") -> bool:
         transformer=lambda result: "Sim" if result else "Não").execute()
     return confirmacao
 
-# Menu de login que retorna senha e usuário
+# Menu de login que retorna senha e usuário // Adicionar um texto que quando o usuario digitar info aparecerá info
 def menu_login() -> dict:
     nome = inquirer.text(message="Qual o seu nome completo:").execute()
     while True:        
