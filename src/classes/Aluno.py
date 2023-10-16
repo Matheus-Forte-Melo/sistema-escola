@@ -6,9 +6,9 @@ class Aluno(UsuarioDB): # Herdando métodos de comunicação
 
     # Retorna uma tupla com os atributos referentes ao registro do banco com a senha correspondente
     def realizarLogin(self, nome, senha):
-        self._iniciarConn() 
         query = "CALL buscar_aluno(%s, %s)"
         values = (nome, senha)
+        self._iniciarConn() 
         self._cursor.execute(query, values)
         atributos = self._cursor.fetchall()
         self._fecharConn()

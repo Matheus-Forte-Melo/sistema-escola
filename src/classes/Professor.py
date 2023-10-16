@@ -9,9 +9,9 @@ class Professor(UsuarioDB):
         self.__turmas_lecionadas = None
 
     def realizarLogin(self, nome, senha):
-        self._iniciarConn()
         query = "CALL buscar_professor(%s, %s)"
         values = (nome, senha)
+        self._iniciarConn()
         self._cursor.execute(query, values)
         atributos = self._cursor.fetchall()
         self._fecharConn()
@@ -36,7 +36,3 @@ class Professor(UsuarioDB):
             return f"{self.__primeiro_nome} {self.__sobrenome}"
         return self.__primeiro_nome
         
-nome = "Raquel Ely Legal"
-senha = "loveenglish123"
-professor = Professor().realizarLogin(nome, senha)
-print(professor)
