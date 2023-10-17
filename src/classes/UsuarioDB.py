@@ -4,7 +4,7 @@ import mysql.connector
 class UsuarioDB:
     def __init__(self, atributo) -> None:
         self.atributo = atributo
-        self.__atributo_protegido = "Olá"
+        self.__atributo_protegido = "Oláaaa"
         
 
     def _realizarLogin(self): 
