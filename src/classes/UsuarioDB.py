@@ -2,10 +2,10 @@ import mysql.connector
 # Esta é a classe principal de todos os usuários. Todas as 3 categorias de usuário no sistema herdam as funcionalidade desta classe
 
 class UsuarioDB:
-    def __init__(self, atributo) -> None:
-        self.atributo = atributo
-        self.__atributo_protegido = "Oláaaa"
-        
+    def __init__(self) -> None:
+        self.id = None
+        self.primeiro_nome = None
+        self.sobrenome = None
 
     def _realizarLogin(self): 
         pass
@@ -24,13 +24,22 @@ class UsuarioDB:
             self._conn.close()
             self._cursor.close()
 
+    # Usado para buscar no banco de dados os atributos conforme a senha e nome indicados
+    def _buscar_nome_senha(self, query, values) -> list:
+        self._iniciarConn()
+        self._cursor.execute(query, values)
+        atributos = self._cursor.fetchall()
+        self._cursor.close()
+        return atributos
+
     @classmethod
     def _instanciar_da_tupla(cls, tupla):
-        pass
+        instancia = cls()
+        instancia.id = tupla[0]
+        instancia.primeiro_nome = tupla[1]
+        instancia.sobrenome = tupla[2]
+        return instancia
             
+# E se eu botar getteres and setters aq?
+# Get nome, get sobrenome, get id
 
-user = UsuarioDB("Teste")
-print(user._UsuarioDB__atributo_protegido)
-# Name mangling, como q eu não sabia dessa porra ainda, entao parta tornar realmente privado
-# Precisamos definir um setter (para restringir de fato) e um getter (para printar) nog
-#

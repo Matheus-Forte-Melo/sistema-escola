@@ -1,3 +1,5 @@
+# TODO Encapsular as paradas
+
 from UsuarioDB import UsuarioDB
 
 class Aluno(UsuarioDB): # Herdando métodos de comunicação
@@ -8,17 +10,15 @@ class Aluno(UsuarioDB): # Herdando métodos de comunicação
     def realizarLogin(self, nome, senha):
         query = "CALL buscar_aluno(%s, %s)"
         values = (nome, senha)
-        self._iniciarConn() 
-        self._cursor.execute(query, values)
-        atributos = self._cursor.fetchall()
-        self._fecharConn()
-
-        return self.__instanciar_de_tupla(atributos[0])
+        atributos = self._buscar_nome_senha(query, values)
+        return self._instanciar_de_tupla(atributos[0])
 
     # Retorna uma instancia da classe aluno com atributos referentes a tupla
     @classmethod
-    def __instanciar_de_tupla(cls, tupla):
-        aluno = cls()
+    def _instanciar_de_tupla(cls, tupla):
+        # Esse metodo se comporta diferente dos demais pois seu campo de identificação é matricula,
+        # Poderia fazer uma condição usando __class__.__name__ mas quero ter um exemplo de polimorfismo
+        aluno = cls() 
         aluno.__matricula = tupla[0]
         aluno.__primeiro_nome = tupla[1]
         aluno.__sobrenome = tupla[2]
@@ -33,16 +33,3 @@ class Aluno(UsuarioDB): # Herdando métodos de comunicação
         if completo:
             return f"{self.__primeiro_nome} {self.__sobrenome}"
         return self.__primeiro_nome
-
-    def getNascimento():
-        pass
-
-    def getResponsaveis():
-        pass
-    
-
-# senha = "oopp12125"
-# nome = "Matheus Forte de Melo"
-# aluno = Aluno().realizarLogin(nome, senha)
-# print(aluno.matricula)
-# aluno.realizarLogin(senha)
