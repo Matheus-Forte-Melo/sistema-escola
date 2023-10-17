@@ -12,7 +12,7 @@ def login(classe):
     print('\033[32m[!]\033[0m Caso queira cancelar e sair, digite APENAS "sair" no campo de senha.')
     while True: 
         credenciais = menu_login() 
-        try: 
+        try:            
             instancia = classe.realizarLogin(credenciais['nome'], credenciais['senha'])
             break
         except IndexError:
