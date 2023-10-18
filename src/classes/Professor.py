@@ -17,6 +17,9 @@ class Professor(UsuarioDB):
     def buscar_turmas_lecionadas(self):
         pass
 
+    def getId(self):
+        return self.id
+    
     def getNome(self,  completo=False):
         if completo:
             return f"{self.primeiro_nome} {self.sobrenome}"

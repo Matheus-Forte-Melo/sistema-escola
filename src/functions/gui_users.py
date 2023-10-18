@@ -47,14 +47,21 @@ def ver_perfil_aluno(aluno):
         acao = inquirer.select(message="O que deseja fazer?", choices=["Voltar"]).execute()
 
 #===========================================================================================================
-
+#=========================== MENU DA EQUIPE DA ESCOLA ======================================================
 def menu_professor():
     professor = login(classe=Professor())
-    printarFiglet(f"{saudacoesTempo(getDataTempo())}, Professor(a)!")
-    print(f"Logado(a) como: {professor.getNome(completo=True)}")
-    inquirer.select(
+    while True:
+        printarFiglet(f"{saudacoesTempo(getDataTempo())}, Professor(a)!")
+        print(f"Logado(a) como: {professor.getNome(completo=True)}")
+        acao = inquirer.select(
         message="O que deseja fazer",
-        choices=["Ver Perfil", "Listar Alunos", "Listar Turmas", "Gerenciar Notas", "Sair do sistema"]).execute()
+        choices=["Ver Perfil", "Listar Alunos", "Listar Turmas", "Gerenciar Notas", "Sair do Sistema"]).execute()
+
+        match acao:
+            case "Ver Perfil":
+                ver_perfil_staff(professor)                
+            case "Sair do Sistema":
+                break
 
 def menu_administrador():
     adm = login(classe=Administrador())
@@ -64,3 +71,9 @@ def menu_administrador():
         message="O que deseja fazer",
         choices=["Ver Perfil", "Gerenciar Alunos", "Gerenciar Turmas", "Gerenciar Notas", "Sair do sistema"]).execute()
 
+def ver_perfil_staff(instancia):
+    printarLinha(40)
+    print(f"Id: {instancia.getId()}\n"
+        f"Nome: {instancia.getNome(True)}\n")
+    printarLinha(40)
+    acao = inquirer.select(message="O que deseja fazer?", choices=["Voltar"]).execute()
