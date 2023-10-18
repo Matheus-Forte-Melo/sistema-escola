@@ -35,6 +35,8 @@ def menu_aluno():
             case "Sair do Sistema":
                 break
 
+#========================================================================================
+
 def ver_perfil_aluno(aluno):
         printarLinha(40)
         print(f"Matricula: {aluno.getMatricula()}\n"
@@ -46,7 +48,6 @@ def ver_perfil_aluno(aluno):
         printarLinha(40)
         acao = inquirer.select(message="O que deseja fazer?", choices=["Voltar"]).execute()
 
-#===========================================================================================================
 #=========================== MENU DA EQUIPE DA ESCOLA ======================================================
 def menu_professor():
     professor = login(classe=Professor())
@@ -65,15 +66,23 @@ def menu_professor():
 
 def menu_administrador():
     adm = login(classe=Administrador())
-    printarFiglet(f"{saudacoesTempo(getDataTempo())}, Admin!")
-    print(f"Logado(a) como: {adm.getNome(completo=True)}")
-    inquirer.select(
-        message="O que deseja fazer",
-        choices=["Ver Perfil", "Gerenciar Alunos", "Gerenciar Turmas", "Gerenciar Notas", "Sair do sistema"]).execute()
+    while True:
+        printarFiglet(f"{saudacoesTempo(getDataTempo())}, Admin!")
+        print(f"Logado(a) como: {adm.getNome(completo=True)}")
+        acao = inquirer.select(
+            message="O que deseja fazer",
+            choices=["Ver Perfil", "Gerenciar Alunos", "Gerenciar Turmas", "Gerenciar Notas", "Sair do Sistema"]).execute()
+
+        match acao:
+            case "Ver Perfil":
+                ver_perfil_staff(adm)                
+            case "Sair do Sistema":
+                break
 
 def ver_perfil_staff(instancia):
     printarLinha(40)
     print(f"Id: {instancia.getId()}\n"
         f"Nome: {instancia.getNome(True)}\n")
-    printarLinha(40)
+    if instancia.__class.__name == "Professor":
+        choices = ["Voltar", "Ver Turmas que Leciniona", "iVer Disciplinas que Lescona"]
     acao = inquirer.select(message="O que deseja fazer?", choices=["Voltar"]).execute()
