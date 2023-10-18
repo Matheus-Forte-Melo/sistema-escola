@@ -19,20 +19,35 @@ def login(classe):
             print("\033[91m[!]\033[0m Seu nome ou senha estão incorretos")
     return instancia
 
+#================================================= GUI DOS ALUNOS ==========================================================
 def menu_aluno():
     aluno = login(classe=Aluno())
-    printarFiglet(f"{saudacoesTempo(getDataTempo())}, Estudante!")
-    print(f"Logado como: {aluno.getNome(completo=True)}")
-    acao = inquirer.select(
-        message="O que deseja fazer:",
-        choices=["Ver perfil", "Listar Notas", "Listar Turma", "Sair do Sistema",]
-    ).execute()
-        # Enquanto as credenciais não estiverem corretas nao deixar logar
-        # O usuário terá a opção de tentar novamente e sair.
-        # Permitir que os usuarios desloguem e saiam do sistema aqui e no menu incial.
-        # Permitir que os usuarios voltem para o menu inicial? (precisaria transformar numa função para chama-la novamente)
+    while True:
+        printarFiglet(f"{saudacoesTempo(getDataTempo())}, Estudante!")
+        print(f"Logado como: {aluno.getNome(completo=True)}")
+        acao = inquirer.select(
+            message="O que deseja fazer:",
+            choices=["Ver Perfil", "Listar Notas", "Listar Turma", "Sair do Sistema",]
+        ).execute()
+        match acao:
+            case "Ver Perfil":
+                ver_perfil_aluno(aluno)                
+            case "Sair do Sistema":
+                break
 
-# Melhorar isso aqui
+def ver_perfil_aluno(aluno):
+        printarLinha(40)
+        print(f"Matricula: {aluno.getMatricula()}\n"
+            f"Nome: {aluno.getNome(True)}\n"
+            f"Nascimento: {aluno.getNascimento()}\n"
+            f"Você estuda na turma: {aluno.getTurma()}\n"
+            f"Responsáveis:\n", end="" 
+            f"{aluno.getResponsaveis()[0]} e {aluno.getResponsaveis()[1]}\n")
+        printarLinha(40)
+        acao = inquirer.select(message="O que deseja fazer?", choices=["Voltar"]).execute()
+
+#===========================================================================================================
+
 def menu_professor():
     professor = login(classe=Professor())
     printarFiglet(f"{saudacoesTempo(getDataTempo())}, Professor(a)!")
