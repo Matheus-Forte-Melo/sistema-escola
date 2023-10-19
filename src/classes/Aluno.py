@@ -1,5 +1,5 @@
 # TODO Encapsular as paradas
-
+from Turma import Turma
 from UsuarioDB import UsuarioDB
 
 class Aluno(UsuarioDB): # Herdando métodos de comunicação
@@ -25,17 +25,16 @@ class Aluno(UsuarioDB): # Herdando métodos de comunicação
         aluno.__nascimento = tupla[3]
         aluno.__turma = tupla[4]
         aluno.__responsaveis = (tupla[5], tupla[6])
+        aluno.__idTurma = tupla[7]
         return aluno
-    
-    # Não tem nenhum atributo propriamente encapsulado pq vc mudar sua matricula i.e nao vai mudar nada no sistema, só vai
-    # fazer você propositalmente causar erros de busca, já que essa classe não tem acesso
-    # A nada que possa interferir/alterar atributos nas entranhas do banco de dados
     
     def getMatricula(self):
         return self.__matricula
     
-    def getTurma(self):
-        return self.__turma
+    def getTurma(self, nome=True):
+        if nome:
+            return self.__turma
+        return self.__idTurma
 
     def getResponsaveis(self):
         return self.__responsaveis
@@ -48,8 +47,4 @@ class Aluno(UsuarioDB): # Herdando métodos de comunicação
     def getNascimento(self):
         return self.__nascimento
 
-
-
     
-    
-        
