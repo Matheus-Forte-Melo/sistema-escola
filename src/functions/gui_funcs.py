@@ -25,9 +25,10 @@ def menuInicial() -> str:
 
     return usuario 
 
-def criarTabela(header: list, *colunas) -> AsciiTable:
+def criarTabela(header: list, colunas) -> AsciiTable:
     dados_tabela = []
     dados_tabela.append(header)
+
     for coluna in colunas:
         dados_tabela.append(coluna)
     

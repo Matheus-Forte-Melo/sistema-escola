@@ -41,7 +41,8 @@ def menu_aluno():
 
 def listar_turma_aluno(aluno):
     turma_atual = Turma().buscarTurma(aluno.getTurma(False)) # Não é uma instância, por enquanto?
-    print(turma_atual)
+    tabela = criarTabela(["Primeiro Nome", "Sobrenome", "Nascimento"], turma_atual)
+    printarTabela(tabela)
     acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
 
 def menu_professor():

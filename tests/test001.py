@@ -1,31 +1,11 @@
-class Classe:
-    def __init__(self, nome: str, idade: int) -> None:
-        self.nome = nome
-        self.idade = idade
+from sys import path
+path.append('src')
+import datetime
+from functions.gui_funcs import criarTabela, printarTabela
 
-    def metodo(self):
-        return "Teste"
-
-class Classe2:
-    def __init__(self, escola) -> None:
-        self.escola = escola
-
-    def metodo2(self):
-        return "Teste2"
-
-class SubClasse(Classe):
-    def __init__(self) -> None:
-        pass
-
-classe = Classe("José", 54)
-classe2 = Classe2("Alvino Tribess")
-subclasse = SubClasse()
-print(subclasse.metodo())
-
-print(subclasse.__dict__)
-# print(subclasse.metodo2())
+dados = [('Matheus', 'Forte de Melo', datetime.date(2006, 2, 15)), ('Kauã', 'Nazário', datetime.date(2006, 7, 12))]
+header = ["Primeiro Nome"," Sobrenome", "Nascimento"]
 
 
-# class SubClasse(Classe):
-#     def __init__(self) -> None: # Dá de herdar só os métodos, so fazer outro construtor, ele vai dar override porque ele vê primeiro no instance level
-#         pass
+tabela = criarTabela(header, dados)
+printarTabela(tabela)
