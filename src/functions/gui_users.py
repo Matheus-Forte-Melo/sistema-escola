@@ -40,8 +40,9 @@ def menu_aluno():
                 break
 
 def listar_turma_aluno(aluno):
-    turma_atual = Turma().buscarTurma(aluno.getTurma(False)) # Não é uma instância, por enquanto?
+    turma_atual = Turma().buscar_turma_matricula(aluno.getTurma(False))
     tabela = criarTabela(["Primeiro Nome", "Sobrenome", "Nascimento"], turma_atual)
+    print("A media da turma é de {} pontos")
     printarTabela(tabela)
     acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
 

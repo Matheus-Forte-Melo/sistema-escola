@@ -1,27 +1,17 @@
-import mysql.connector
+from EntidadeDB import EntidadeDB
 
-class Turma:
+class Turma(EntidadeDB):
     def __init__(self) -> None:
+        super().__init__()
         self.serie = None
         self.turno = None
         self.fase = None
         self.numero = None
+        self.integrantes = None
+        self.professores = None
 
-    def _iniciarConn(self):
-        self._conn = mysql.connector.connect(
-            user="root",
-            password = "",
-            host = "127.0.0.1",
-            database = "sistemaescolar"
-            )
-        self._cursor = self._conn.cursor()
-
-    def _fecharConn(self):
-        if self._conn is not None:
-            self._conn.close()
-            self._cursor.close()
-
-    def buscarTurma(self, id):
+    # Busca turma com base na matricula de um aluno, não realiza instanciamento
+    def buscar_turma_matricula(self, id):
         query = "CALL busca_turma_atual(%s)"
         values = (id,)
         self._iniciarConn()
@@ -29,3 +19,4 @@ class Turma:
         atributos = self._cursor.fetchall()
         self._fecharConn()
         return atributos
+    
