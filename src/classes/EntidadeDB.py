@@ -20,6 +20,13 @@ class EntidadeDB:
             self._conn.close()
             self._cursor.close()
 
+    def realizarBusca(self, query, values):
+        self._iniciarConn()
+        self._cursor.execute(query, values)
+        output = self._cursor.fetchall()
+        self._fecharConn()
+        return output
+
     @classmethod
     def _instanciar_da_tupla(cls, tupla):
         pass

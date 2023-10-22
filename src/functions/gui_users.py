@@ -2,6 +2,7 @@
 from sys import path
 path.append("src"), path.append("src\\classes")
 
+from classes.Nota import Notas
 from classes.Aluno import Aluno
 from classes.Professor import Professor 
 from classes.Administrador import Administrador
@@ -36,6 +37,8 @@ def menu_aluno():
                 ver_perfil(aluno)                
             case "Listar Turma":
                 listar_turma_aluno(aluno)
+            case "Listar Notas":
+                listar_notas_aluno(aluno)
             case "Sair do Sistema":
                 break
 
@@ -43,6 +46,14 @@ def listar_turma_aluno(aluno):
     turma_atual = Turma().buscar_turma_matricula(aluno.getTurma(False))
     tabela = criarTabela(["Primeiro Nome", "Sobrenome", "Nascimento"], turma_atual)
     print("A media da turma é de {} pontos")
+    printarTabela(tabela)
+    acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
+
+def listar_notas_aluno(aluno):
+    disciplinas = Notas().buscar_disciplina(aluno.getMatricula())
+    acao = inquirer.select(message="O que deseja fazer:",choices=disciplinas).execute()
+    dados_colunas, comentarios = Notas().buscar_notas_matricula(aluno.getMatricula(), acao)
+    tabela = criarTabela(["Numero", "Nota", "Data", "Professor"], dados_colunas)
     printarTabela(tabela)
     acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
 

@@ -14,9 +14,6 @@ class Turma(EntidadeDB):
     def buscar_turma_matricula(self, id):
         query = "CALL busca_turma_atual(%s)"
         values = (id,)
-        self._iniciarConn()
-        self._cursor.execute(query, values)
-        atributos = self._cursor.fetchall()
-        self._fecharConn()
+        atributos = self.realizarBusca(query, values)
         return atributos
     
