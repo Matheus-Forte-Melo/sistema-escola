@@ -2,7 +2,7 @@ from EntidadeDB import EntidadeDB
 
 class Turma(EntidadeDB):
     def __init__(self) -> None:
-        super().__init__()
+        #super().__init__()
         self.serie = None
         self.turno = None
         self.fase = None
