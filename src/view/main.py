@@ -2,7 +2,8 @@ from sys import path
 path.append("src")
 path.append("src\\functions") # Por enquanto vai funcionar, mas creio que isso não seja a melhor solução. Empacotarei as funcões depois
 
-from functions import gui_users
+from functions import gui_aluno
+from functions import gui_staff
 from functions import gui_funcs
 
 # Confirmação, talvez mude de lugar mais tarde e transforme numa função
@@ -14,9 +15,9 @@ while not confirmado:
 
 match usuario:
     case "Aluno":
-        gui_users.menu_aluno()
+        gui_aluno.menu_aluno()
     case "Professor":
-        gui_users.menu_professor()
+        gui_staff.menu_professor()
     case "Administrador":
-        gui_users.menu_administrador()
+        gui_staff.menu_administrador()
 
