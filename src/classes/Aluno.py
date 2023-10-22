@@ -10,7 +10,7 @@ class Aluno(UsuarioDB): # Herdando métodos de comunicação
     def realizarLogin(self, nome, senha):
         query = "CALL buscar_aluno(%s, %s)"
         values = (nome, senha)
-        atributos = self._buscar_nome_senha(query, values)
+        atributos = self.realizarBusca(query, values)
         return self._instanciar_de_tupla(atributos[0])
 
     # Retorna uma instancia da classe aluno com atributos referentes a tupla

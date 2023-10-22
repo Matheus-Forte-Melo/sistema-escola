@@ -2,13 +2,13 @@ from UsuarioDB import UsuarioDB
 
 class Professor(UsuarioDB):
     def __init__(self) -> None:
-        self.disciplinas = None
-        self.turmas_lecionadas = None
+        self._disciplinas = None
+        self._turmas_lecionadas = None
 
     def realizarLogin(self, nome, senha):
         query = "CALL buscar_professor(%s, %s)"
         values = (nome, senha)
-        atributos = self._buscar_nome_senha(query, values)
+        atributos = self.realizarBusca(query, values)
         return self._instanciar_da_tupla(atributos[0])
     
     @classmethod
@@ -19,32 +19,30 @@ class Professor(UsuarioDB):
         return instancia
 
     def buscar_qntd_turma(self):
-        query = f"CALL buscar_qnt_turmas_prof(%s);"
-        values = (self.id,)
-        self._iniciarConn()
-        self._cursor.execute(query, values)
-        self.turmas_lecionadas = self._cursor.fetchall()
-        self._fecharConn()
+        query = f"CALL buscar_turmas_prof(%s);"
+        values = (self._id,)
+        self._turmas_lecionadas = self.realizarBusca(query, values)
 
     def buscar_disciplinas(self) -> None:
         query = f"CALL buscar_disciplinas_prof(%s)"
-        values = (self.id,)
-        self._iniciarConn()
-        self._cursor.execute(query, values)
-        self.disciplinas = self._cursor.fetchall()
-        self._fecharConn()
+        values = (self._id,)
+        self._disciplinas = self.realizarBusca(query, values)
 
     def getId(self):
-        return self.id
+        return self._id
     
     def getNome(self,  completo=False):
         if completo:
-            return f"{self.primeiro_nome} {self.sobrenome}"
-        return self.primeiro_nome
+            return f"{self._primeiro_nome} {self._sobrenome}"
+        return self._primeiro_nome
     
     def getDisciplinas(self):
-        return self.disciplinas
+        return self._disciplinas
 
-    def getTurmas(self):
-        return self.turmas_lecionadas[0][0]
+    def getTurmas(self, quant=True):
+        if quant:
+            return len(self._turmas_lecionadas)
+        return self._turmas_lecionadas
+    
+
         

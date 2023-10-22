@@ -17,3 +17,9 @@ class Turma(EntidadeDB):
         atributos = self.realizarBusca(query, values)
         return atributos
     
+    def buscar_turma(self, id):
+        query = "CALL buscar_turma(%s)"
+        values = (id,)
+        atributos = self.realizarBusca(query, values)
+        return atributos
+    

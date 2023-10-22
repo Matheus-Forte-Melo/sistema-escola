@@ -24,21 +24,23 @@ class UsuarioDB:
             self._conn.close()
             self._cursor.close()
 
-    # Usado para buscar no banco de dados os atributos conforme a senha e nome indicados
-    def _buscar_nome_senha(self, query, values) -> list:
+    # Usado para buscar no banco de dados os atributos conforme os valores indicados
+    def realizarBusca(self, query, values):
         self._iniciarConn()
         self._cursor.execute(query, values)
-        atributos = self._cursor.fetchall()
-        self._cursor.close()
-        return atributos
+        output = self._cursor.fetchall()
+        self._fecharConn()
+        return output
 
     @classmethod
     def _instanciar_da_tupla(cls, tupla):
         instancia = cls()
-        instancia.id = tupla[0]
-        instancia.primeiro_nome = tupla[1]
-        instancia.sobrenome = tupla[2]
+        instancia._id = tupla[0]
+        instancia._primeiro_nome = tupla[1]
+        instancia._sobrenome = tupla[2]
         return instancia
+    
+    
             
 # E se eu botar getteres and setters aq?
 # Get nome, get sobrenome, get id
