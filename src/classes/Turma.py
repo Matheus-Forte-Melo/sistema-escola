@@ -1,12 +1,12 @@
 from EntidadeDB import EntidadeDB
 
 class Turma(EntidadeDB):
-    def __init__(self) -> None:
+    def __init__(self, serie="", turno="", fase="", numero=1) -> None:
         #super().__init__()
-        self.serie = None
-        self.turno = None
-        self.fase = None
-        self.numero = None
+        self.serie = serie
+        self.turno = turno
+        self.fase = fase
+        self.numero = numero
         self.integrantes = None
         self.professores = None
 
@@ -22,4 +22,7 @@ class Turma(EntidadeDB):
         values = (id,)
         atributos = self.realizarBusca(query, values)
         return atributos
+    
+    def publicar_banco():
+        pass
     

@@ -1,4 +1,3 @@
-from terminaltables import AsciiTable
 from EntidadeDB import EntidadeDB
 
 class Notas(EntidadeDB):

@@ -27,14 +27,14 @@ def listar_turma_aluno(aluno):
     acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
 
 def listar_notas_aluno(aluno):
-    disciplinas = Notas().buscar_disciplina(aluno.getMatricula())
+    disciplinas = Notas().buscar_disciplina(aluno.getMatricula()) # Não funciona mais, é necessário mudar o procedimento para que ele busque todas as avaliações, e depois busque a disciplina pelo uso de um join
     disciplinas.append("Voltar")
     while True:
         acao = inquirer.select(message="Qual disciplina deseja visualizar:",choices=disciplinas).execute()
 
         if acao != "Voltar":
-            dados_colunas, comentarios = Notas().buscar_notas_matricula(aluno.getMatricula(), acao)
-            tabela = criarTabela(["Numero", "Nota", "Data", "Professor"], dados_colunas)
+            dados_colunas, comentarios = Notas().buscar_notas_matricula(aluno.getMatricula(), acao) # Agora é necessário buscar as notas 
+            tabela = criarTabela(["Numero", "Avaliacao", "Nota", "Data", "Professor(a)"], dados_colunas)
             printarTabela(tabela)
             acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
         else:

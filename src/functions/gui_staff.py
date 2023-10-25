@@ -6,7 +6,7 @@ def menu_professor():
         printarFiglet(f"{saudacoesTempo(getDataTempo())}, Professor(a)!")
         print(f"Logado(a) como: {professor.getNome(completo=True)}")
         acao = inquirer.select(
-        message="O que deseja fazer", choices=["Ver Perfil", "Gerenciar Notas", "Sair do Sistema"]).execute()
+        message="O que deseja fazer", choices=["Ver Perfil", "Gerenciar Avaliações", "Gerenciar Notas", "Sair do Sistema"]).execute()
 
         match acao:
             case "Ver Perfil":
