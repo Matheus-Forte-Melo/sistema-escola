@@ -29,7 +29,7 @@ class Professor(UsuarioDB):
         self._disciplinas = self.realizarBusca(query, values)
 
     def getId(self):
-        return self._id
+        return self._id # Será que isso é necessário?
     
     def getNome(self,  completo=False):
         if completo:
@@ -44,5 +44,8 @@ class Professor(UsuarioDB):
             return len(self._turmas_lecionadas)
         return self._turmas_lecionadas
     
+    def criar_avaliacao(self, Avaliacao):
+        #avaliacao = Avaliacao()
+        pass
 
         

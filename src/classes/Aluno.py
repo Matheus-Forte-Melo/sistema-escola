@@ -1,5 +1,5 @@
 # TODO Encapsular as paradas
-from Turma import Turma
+#from Turma import Turma
 from UsuarioDB import UsuarioDB
 
 class Aluno(UsuarioDB): # Herdando métodos de comunicação

@@ -23,7 +23,7 @@ def menu_gerenciar_notas(professor):
     escolhas.append("Voltar")
 
     selecao = inquirer.select(message="Qual turma:", choices=escolhas).execute()
-    turma = Turma().buscar_turma(selecao)
+    turma = Turma().buscar_turma(selecao, busca_matricula=False)
     tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma)
     printarTabela(tabela)
     selecao = inquirer.select(message="O que deseja fazer",

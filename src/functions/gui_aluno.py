@@ -20,7 +20,7 @@ def menu_aluno():
                 break
 
 def listar_turma_aluno(aluno):
-    turma_atual = Turma().buscar_turma_matricula(aluno.getTurma(False))
+    turma_atual = Turma().buscar_turma(aluno.getTurma(False), busca_matricula=True)
     tabela = criarTabela(["Primeiro Nome", "Sobrenome", "Nascimento"], turma_atual)
     print("A media da turma é de {} pontos")
     printarTabela(tabela)
@@ -33,7 +33,7 @@ def listar_notas_aluno(aluno):
         acao = inquirer.select(message="Qual disciplina deseja visualizar:",choices=disciplinas).execute()
 
         if acao != "Voltar":
-            dados_colunas, comentarios = Notas().buscar_notas_matricula(aluno.getMatricula(), acao) # Agora é necessário buscar as notas 
+            dados_colunas, comentarios = Notas().buscar_notas_matricula(aluno.getMatricula(), acao) 
             tabela = criarTabela(["Numero", "Avaliacao", "Nota", "Data", "Professor(a)"], dados_colunas)
             printarTabela(tabela)
             acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
@@ -51,7 +51,6 @@ def exibir_perfil_aluno(aluno):
     
 
 def ver_perfil(instancia) -> None:
-        nome_classe = instancia.__class__.__name__
         printarLinha(40)
         exibir_perfil_aluno(instancia)
         printarLinha(40)

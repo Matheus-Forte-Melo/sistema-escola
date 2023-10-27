@@ -10,19 +10,12 @@ class Turma(EntidadeDB):
         self.integrantes = None
         self.professores = None
 
-    # Busca turma com base na matricula de um aluno, não realiza instanciamento
-    def buscar_turma_matricula(self, id):
-        query = "CALL busca_turma_atual(%s)"
-        values = (id,)
-        atributos = self.realizarBusca(query, values)
-        return atributos
-    
-    def buscar_turma(self, id):
-        query = "CALL buscar_turma(%s)"
-        values = (id,)
-        atributos = self.realizarBusca(query, values)
-        return atributos
-    
-    def publicar_banco():
-        pass
-    
+    # Busca os registros de uma turma com base na matricula de um aluno ou nome da turma.
+    def buscar_turma(self, valor, busca_matricula=True):
+        if busca_matricula:
+            query = "CALL buscar_turma_por_matricula(%s)"
+        else:
+            query = "CALL buscar_turma_pelo_nome(%s)"
+        values = (valor,)
+        return self.realizarBusca(query, values)
+
