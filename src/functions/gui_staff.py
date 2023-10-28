@@ -90,8 +90,8 @@ def criar_avaliacao(professor, nome_turma):
     nome = inquirer.text(message="Insira o título da avaliação:").execute()
     print("\033[32m[!]\033[0m Caso não queira inserir nenhum detalhe apenas aperte [ENTER]")
     descricao = inquirer.text(message="Insira os detalhes da avaliação:").execute()
-    disciplina = inquirer.select(message="Qual disciplina",choices=professor.getDisciplinas()).execute() 
-    # getDisciplinas_turma() ->x
+    disciplina = inquirer.select(message="Qual disciplina",choices=professor.buscar_disciplinas_turma(nome_turma)).execute() 
+    
 
     avaliacao = Avalicao(
         nome=nome.capitalize(),

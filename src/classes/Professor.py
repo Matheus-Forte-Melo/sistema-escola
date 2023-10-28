@@ -25,19 +25,28 @@ class Professor(UsuarioDB):
         self._turmas_lecionadas = self.realizarBusca(query, values)
 
     def buscar_disciplinas(self) -> None:
-        query = f"CALL buscar_disciplinas_prof(%s)"
-        values = (self._id,)
+        query = f"CALL buscar_disciplinas_prof(%s, %s)" # Não funciona mais por enquanto, passar outro arg -> ""
+        values = (self._id, "")
         disciplinas = self.realizarBusca(query, values)
         for disciplina in disciplinas:
-            self._disciplinas.append(disciplina[0])
+            self._disciplinas.append(disciplina[0]) 
 
     def buscar_avaliacoes(self, nome_turma:str) -> tuple:
         query = "CALL buscar_avaliacoes(%s, %s)"
         values = (self._id, nome_turma)
         self.avaliacoes = self.realizarBusca(query, values)
 
+    def buscar_disciplinas_turma(self, nome_turma):
+        output = []
+        query = "CALL buscar_disciplinas_prof(%s, %s)"
+        values = (self._id, nome_turma)
+        disciplinas = self.realizarBusca(query, values)
+        for disciplina in disciplinas:
+            output.append(disciplina[0])
+        return output # Da de melhorar isso, simplificar com aquilo lá em cima
+
     def getId(self):
-        return self._id # Será que isso é necessário?
+        return self._id # Será que isso é necessário?!!!
     
     def getNome(self,  completo=False):
         if completo:
