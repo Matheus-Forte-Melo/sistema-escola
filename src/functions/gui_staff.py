@@ -22,6 +22,8 @@ def menu_professor():
 
 def menu_gerenciar_avaliacoes(professor):
     turma = selecionar_turma(professor, registros=False)
+    professor.buscar_avaliacoes(turma)
+   
     if turma != "Voltar":
         while True:
             print("\033[31m[!] Para mudar a turma volte e entre neste menu novamente.\033[0m")
@@ -33,24 +35,77 @@ def menu_gerenciar_avaliacoes(professor):
                 case "Criar Avaliação":
                     criar_avaliacao(professor, turma)
                 case "Editar Avaliação":
-                    pass
+                    editar_avaliacao(professor, turma)
                 case "Deletar Avaliação":
                     pass
                 case "Voltar":
                     break
 
-def criar_avaliacao(professor, turma):
+def editar_avaliacao(professor, turma): # turma
+    escolhas = []
+    listar_avaliacoes(professor, turma) # Possível bug de exibição caso uma descrição for muito grande | pq len?
+    for pos, avaliacao in enumerate(professor.avaliacoes):
+        escolhas.append(f"Editar {pos+1}°: {avaliacao[1]}")
+    escolhas.append("Voltar")
+    acao = inquirer.select(message="O que deseja fazer",
+                           choices=escolhas).execute()
+    
+    if acao != "Voltar":
+        avl_selecionada = professor.avaliacoes[int(acao[7])-1] # Puta gambiarra, mas funciona
+        # Essa variavél é atribuida com base no número de "acao"
+
+        edit = inquirer.checkbox(
+            message="Editar:", choices=["Nome", "Descrição"],
+            validate=lambda result: len(result) >= 1,
+            invalid_message="Deve ter selecionado pelo menos 1",
+            instruction="[BARRA DE ESPAÇO] para selecionar e [ENTER] para confirmar ").execute()
+        
+        avl_atualizada = input_atualizacoes_aval(list(avl_selecionada), edit)
+        avaliacao = Avalicao(avl_atualizada[0], avl_atualizada[1], avl_atualizada[2])
+        avaliacao.atualizar_avaliacao()
+        print("Edição concluída!")
+
+def input_atualizacoes_aval(avaliacao, edit) -> list:
+    output = {}
+    for value in edit:
+        output[value] = inquirer.text(message=f"Insira o(a) {value}:").execute()
+
+    if "Nome" in output.keys():
+        avaliacao[1] = output["Nome"]
+    if "Descrição" in output.keys():
+        avaliacao[2] = output["Descrição"]
+    return avaliacao
+
+def listar_avaliacoes(professor, turma):
+    professor.buscar_avaliacoes(turma)
+    dados = []
+    for pos, avaliacao in enumerate(professor.avaliacoes):
+        dados.append([str(pos + 1), avaliacao[1], avaliacao[3], avaliacao[2]])
+
+    tabela = criarTabela(["Num", "Avaliação", "Disciplina","Descrição"], dados) 
+    printarTabela(tabela)
+    return(dados)
+
+def criar_avaliacao(professor, nome_turma):
     nome = inquirer.text(message="Insira o título da avaliação:").execute()
     print("\033[32m[!]\033[0m Caso não queira inserir nenhum detalhe apenas aperte [ENTER]")
     descricao = inquirer.text(message="Insira os detalhes da avaliação:").execute()
-    disciplina = inquirer.select(message="Qual disciplina",choices=professor.getDisciplinas()).execute()
+    disciplina = inquirer.select(message="Qual disciplina",choices=professor.getDisciplinas()).execute() 
+    # getDisciplinas_turma() ->x
 
-    avaliacao = Avalicao(nome.capitalize(), descricao, professor.getId(), turma, disciplina)
+    avaliacao = Avalicao(
+        nome=nome.capitalize(),
+        descricao=descricao, 
+        idProfessor=professor.getId(), 
+        turma=nome_turma, 
+        disciplina=disciplina
+        )
     confirm = inquirer.confirm(message="Confirmar?", default=True, confirm_letter="s", reject_letter="n",
                                transformer=lambda result: "SIm" if result else "Não",).execute()
     
     if confirm:
         avaliacao.criar_avaliacao()
+        professor.buscar_avaliacoes(nome_turma)
     del(avaliacao)
     
 def menu_gerenciar_notas(professor):

@@ -4,6 +4,7 @@ class Professor(UsuarioDB):
     def __init__(self) -> None:
         self._disciplinas = []
         self._turmas_lecionadas = None
+        self.avaliacoes = None
 
     def realizarLogin(self, nome, senha):
         query = "CALL buscar_professor(%s, %s)"
@@ -29,6 +30,11 @@ class Professor(UsuarioDB):
         disciplinas = self.realizarBusca(query, values)
         for disciplina in disciplinas:
             self._disciplinas.append(disciplina[0])
+
+    def buscar_avaliacoes(self, nome_turma:str) -> tuple:
+        query = "CALL buscar_avaliacoes(%s, %s)"
+        values = (self._id, nome_turma)
+        self.avaliacoes = self.realizarBusca(query, values)
 
     def getId(self):
         return self._id # Será que isso é necessário?
