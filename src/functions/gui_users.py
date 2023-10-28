@@ -7,6 +7,7 @@ from classes.Aluno import Aluno
 from classes.Professor import Professor 
 from classes.Administrador import Administrador
 from classes.Turma import Turma
+from classes.Avaliacao import Avalicao
 from gui_funcs import *
 
 # Tenta fazer login com o argumento classe recebido. Se sucedido, retorna uma instância dessa classe

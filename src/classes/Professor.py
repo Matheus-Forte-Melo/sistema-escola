@@ -2,7 +2,7 @@ from UsuarioDB import UsuarioDB
 
 class Professor(UsuarioDB):
     def __init__(self) -> None:
-        self._disciplinas = None
+        self._disciplinas = []
         self._turmas_lecionadas = None
 
     def realizarLogin(self, nome, senha):
@@ -26,7 +26,9 @@ class Professor(UsuarioDB):
     def buscar_disciplinas(self) -> None:
         query = f"CALL buscar_disciplinas_prof(%s)"
         values = (self._id,)
-        self._disciplinas = self.realizarBusca(query, values)
+        disciplinas = self.realizarBusca(query, values)
+        for disciplina in disciplinas:
+            self._disciplinas.append(disciplina[0])
 
     def getId(self):
         return self._id # Será que isso é necessário?
@@ -37,15 +39,13 @@ class Professor(UsuarioDB):
         return self._primeiro_nome
     
     def getDisciplinas(self):
-        return self._disciplinas
+        return self._disciplinas # Será que isso é necessário?
 
     def getTurmas(self, quant=True):
         if quant:
             return len(self._turmas_lecionadas)
         return self._turmas_lecionadas
     
-    def criar_avaliacao(self, Avaliacao):
-        #avaliacao = Avaliacao()
-        pass
-
-        
+    # def criar_avaliacao(self, Avaliacao):
+    #     #avaliacao = Avaliacao()
+    #     pass

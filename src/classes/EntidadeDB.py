@@ -27,10 +27,11 @@ class EntidadeDB:
         self._fecharConn()
         return output
     
-    def inserir_valores(self, query, values):
-        self._iniciarConn()
-        self._cursor.execute(query, values)
-        self._fecharConn()
+    # def inserir_valores(self, query, values):
+    #     self._iniciarConn()
+    #     self._cursor.execute(query, values)
+    #     self._conn.commit()
+    #     self._fecharConn()
 
 
     @classmethod
