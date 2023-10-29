@@ -18,7 +18,7 @@ class Avalicao(EntidadeDB):
         self._conn.commit()
         self._fecharConn()
 
-    def atualizar_avaliacao(self): 
+    def atualizar(self): 
         values = (self.id, self.nome, self.descricao)
          # Ele faz update em todos esses valores, mudados ou não. Poderia economizar no tráfego do banco simplesmente montando uma query personalizada durante o menu de edição mas quis experiementar desse modo (aproveitar que ninguem vai usar esse sistema pra dar uma brincada com outras opções).
         query = "CALL atualizar_avaliacao(%s, %s, %s)"
@@ -27,5 +27,10 @@ class Avalicao(EntidadeDB):
         self._conn.commit()
         self._fecharConn()
 
-    def deletar_avalicao(self):
-        pass
+    def deletar(self):
+        query = "CALL deletar_avaliacao(%s)"
+        values = (self.id,)
+        self._iniciarConn()
+        self._cursor.execute(query, values)
+        self._conn.commit()
+        self._fecharConn()
