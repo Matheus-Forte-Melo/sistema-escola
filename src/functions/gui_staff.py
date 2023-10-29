@@ -37,17 +37,27 @@ def menu_gerenciar_avaliacoes(professor):
                 case "Editar Avaliação":
                     editar_avaliacao(professor, turma)
                 case "Deletar Avaliação":
-                    pass
+                    deletar_avaliacao(professor, turma)
                 case "Voltar":
                     break
 
+def deletar_avaliacao(professor, turma):
+    auto_completer = {}
+    listar_avaliacoes(professor, turma)
+    for pos, avaliacao in enumerate(professor.avaliacoes):
+        auto_completer[f"{pos+1}-{avaliacao[1]}"] = None
+    escolha = inquirer.text(message="Qual avaliação deletar: ", completer=auto_completer).execute()
+
+    print(professor.avaliacoes[int(escolha[0])-1]) 
+    quit()
+
 def editar_avaliacao(professor, turma): # turma
     escolhas = []
-    listar_avaliacoes(professor, turma) # Possível bug de exibição caso uma descrição for muito grande | pq len?
+    listar_avaliacoes(professor, turma) # Possível bug de exibição caso uma descrição for muito grande
     for pos, avaliacao in enumerate(professor.avaliacoes):
         escolhas.append(f"Editar {pos+1}°: {avaliacao[1]}")
     escolhas.append("Voltar")
-    acao = inquirer.select(message="O que deseja fazer",
+    acao = inquirer.select(message="O que deseja fazer", # Substituir por text completer, mt melhor, vai dar de reutilizar cod.
                            choices=escolhas).execute()
     
     if acao != "Voltar":
@@ -77,20 +87,21 @@ def input_atualizacoes_aval(avaliacao, edit) -> list:
     return avaliacao
 
 def listar_avaliacoes(professor, turma):
-    professor.buscar_avaliacoes(turma)
+    professor.buscar_avaliacoes(turma) # Teóricamente isso ja foi feito | Na vdd precisa, pq atualiza o client size quando usamos essa funcao sempre q listamos. 
     dados = []
     for pos, avaliacao in enumerate(professor.avaliacoes):
         dados.append([str(pos + 1), avaliacao[1], avaliacao[3], avaliacao[2]])
 
     tabela = criarTabela(["Num", "Avaliação", "Disciplina","Descrição"], dados) 
     printarTabela(tabela)
-    return(dados)
+    return(dados) # Não está sendo utilizado para nada
 
 def criar_avaliacao(professor, nome_turma):
     nome = inquirer.text(message="Insira o título da avaliação:").execute()
     print("\033[32m[!]\033[0m Caso não queira inserir nenhum detalhe apenas aperte [ENTER]")
     descricao = inquirer.text(message="Insira os detalhes da avaliação:").execute()
-    disciplina = inquirer.select(message="Qual disciplina",choices=professor.buscar_disciplinas_turma(nome_turma)).execute() 
+    disciplina = inquirer.select(message="Qual disciplina",
+                                 choices=professor.buscar_disciplinas_turma(nome_turma)).execute() 
     
 
     avaliacao = Avalicao(
@@ -113,7 +124,8 @@ def menu_gerenciar_notas(professor):
     tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma)
     printarTabela(tabela)
     selecao = inquirer.select(message="O que deseja fazer",
-                              choices=["Atribuir Nota Individual", "Atribuir Nota à Turma", "Editar Nota", "Voltar"]).execute()
+                              choices=["Atribuir Nota Individual", "Atribuir Nota à Turma",
+                                        "Editar Nota", "Voltar"]).execute()
     
     match selecao:
         case "Atribuir Nota à Turma":
@@ -158,7 +170,8 @@ def menu_administrador():
         print(f"Logado(a) como: {adm.getNome(completo=True)}")
         acao = inquirer.select(
             message="O que deseja fazer",
-            choices=["Ver Perfil", "Gerenciar Alunos", "Gerenciar Turmas", "Gerenciar Notas", "Sair do Sistema"]).execute()
+            choices=["Ver Perfil", "Gerenciar Alunos", "Gerenciar Turmas",
+                      "Gerenciar Notas", "Sair do Sistema"]).execute()
 
         match acao:
             case "Ver Perfil":
