@@ -5,10 +5,8 @@ def menu_aluno():
     while True:
         printarFiglet(f"{saudacoesTempo(getDataTempo())}, Estudante!")
         print(f"Logado como: {aluno.getNome(completo=True)}")
-        acao = inquirer.select(
-            message="O que deseja fazer:",
-            choices=["Ver Perfil", "Listar Notas", "Listar Turma", "Sair do Sistema",]
-        ).execute()
+        escolhas = ["Ver Perfil", "Listar Notas", "Listar Turma", "Sair do Sistema"]
+        acao = input_select("O que deseja fazer:", escolhas)
         match acao:
             case "Ver Perfil":
                 ver_perfil(aluno)                
@@ -24,19 +22,19 @@ def listar_turma_aluno(aluno):
     tabela = criarTabela(["Primeiro Nome", "Sobrenome", "Nascimento"], turma_atual)
     print("A media da turma é de {} pontos")
     printarTabela(tabela)
-    acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
+    acao = input_select("O que deseja fazer:", ["Voltar"])
 
 def listar_notas_aluno(aluno):
     disciplinas = Notas().buscar_disciplina(aluno.getMatricula()) # Não funciona mais, é necessário mudar o procedimento para que ele busque todas as avaliações, e depois busque a disciplina pelo uso de um join
     disciplinas.append("Voltar")
     while True:
-        acao = inquirer.select(message="Qual disciplina deseja visualizar:",choices=disciplinas).execute()
+        acao = input_select("Qual disciplina você deseja vizuaizar:", disciplinas)
 
         if acao != "Voltar":
             dados_colunas, comentarios = Notas().buscar_notas_matricula(aluno.getMatricula(), acao) 
             tabela = criarTabela(["Numero", "Avaliacao", "Nota", "Data", "Professor(a)"], dados_colunas)
             printarTabela(tabela)
-            acao = inquirer.select(message="O que deseja fazer:",choices=["Voltar"]).execute()
+            acao = input_select("O que desejeva fazer", ["Voltar"])
         else:
             break
 
@@ -54,6 +52,5 @@ def ver_perfil(instancia) -> None:
         printarLinha(40)
         exibir_perfil_aluno(instancia)
         printarLinha(40)
-        acao = inquirer.select(message="O que deseja fazer:",
-                               choices=["Voltar"]).execute()
+        acao = input_select("O que deseja fazer", ["Voltar"])
         

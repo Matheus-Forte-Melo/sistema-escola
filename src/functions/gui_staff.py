@@ -18,6 +18,7 @@ def menu_professor():
             case "Sair do Sistema":
                 break
 
+
 def menu_gerenciar_avaliacoes(professor): 
     turma = selecionar_turma(professor, registros=False)
     professor.buscar_avaliacoes(turma)
@@ -39,18 +40,21 @@ def menu_gerenciar_avaliacoes(professor):
                 case "Voltar":
                     break
 
-def deletar_avaliacao(professor, turma): # Levantar erro caso botar algo que não existe
+def completer_aval(professor, turma, mensagem="", avanco="") -> str:
     auto_completer = {}
     listar_avaliacoes(professor, turma)
     for pos, avaliacao in enumerate(professor.avaliacoes):
         auto_completer[f"{pos+1}-{avaliacao[1]}"] = None
-    auto_completer["0-Voltar"] = None
-    escolha = input_text("Qual avaliacão deletar:", auto_completer)
+    auto_completer[f"0-{avanco}"] = None
+    return input_text(mensagem, auto_completer) # deixar mais dinamico
 
-    if escolha != "0-Voltar":
-        confirmar = input_confirm(f"Confirma deleção de {professor.avaliacoes[int(escolha[0])-1]}")
+def deletar_avaliacao(professor, turma): # Levantar erro caso botar algo que não existe
+    acao = completer_aval(professor, turma, "Deletar", "Voltar")    
+
+    if acao != "0-Voltar":
+        confirmar = input_confirm(f"Confirma deleção de {professor.avaliacoes[int(acao[0])-1]}")
         if confirmar:
-            avl = professor.avaliacoes[int(escolha[0])-1]
+            avl = professor.avaliacoes[int(acao[0])-1]
             avaliacao = Avalicao(avl[0])
             avaliacao.deletar()
             print("--> Deleção concluída! <---")
@@ -60,19 +64,12 @@ def deletar_avaliacao(professor, turma): # Levantar erro caso botar algo que nã
     sleep(0.5)
 
 def editar_avaliacao(professor, turma): # Levantar erro caso botar algo que não existe
-    auto_completer = {}
-    listar_avaliacoes(professor, turma)
-    for pos, avaliacao in enumerate(professor.avaliacoes):
-        auto_completer[f"{pos+1}-{avaliacao[1]}"] = None
-    auto_completer["0-Voltar"] = None
-    acao = input_text("O que deseja fazer", autocomplete=auto_completer) 
+    acao = completer_aval(professor, turma, "Editar:", "Voltar")
     
     if acao != "0-Voltar":
-        avl_selecionada = professor.avaliacoes[int(acao[7])-1] # Puta gambiarra, mas funciona
-        # Essa variavél é atribuida com base no número de "acao"
+        avl = professor.avaliacoes[int(acao[0])-1]
         edit = input_checkbox("Editar", ["Nome", "Descrição"])
-        
-        avl_atualizada = input_atualizacoes_aval(list(avl_selecionada), edit)
+        avl_atualizada = input_atualizacoes_aval(list(avl), edit)
         avaliacao = Avalicao(avl_atualizada[0], avl_atualizada[1], avl_atualizada[2])
         avaliacao.atualizar()
         print("--> Edição concluída! <---")
@@ -126,20 +123,32 @@ def criar_avaliacao(professor, nome_turma):
     del(avaliacao)
     
 def menu_gerenciar_notas(professor):
-    turma = selecionar_turma(professor)
-    tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma)
+    turma = selecionar_turma(professor, registros=True) 
+    avaliacao = selecionar_avaliacao(professor, turma[1])
+    tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma[0])
     printarTabela(tabela)
-    escolhas = ["Atribuir Nota Individual", "Atribuir Nota à Turma","Editar Nota", "Voltar"]
+    print(f"Avaliação selecionada: {avaliacao}")
+    escolhas = ["Selecionar outra avaliação","Atribuir Nota Individual", "Atribuir Nota à Turma","Editar Nota", "Voltar"]
     selecao = input_select("O que deseja fazer:", escolhas)
     
     match selecao:
+        case "Selecionar outra avaliação":
+            selecionar_avaliacao(professor, turma[1])
         case "Atribuir Nota à Turma":
-            atribuir_notas_turma(turma)
+            atribuir_notas_turma(turma[1])
         case "Atribuir Nota Individual":
             pass
 
+def selecionar_avaliacao(professor, turma): 
+    acao = completer_aval(professor, turma, "Selecione:", "Pular")
+
+    if acao != "0-Pular":
+        return acao    
+    return "Indefinida"
+    
+
 # Seleciona uma turma. Retorna os registros dela se registros = True e apenas a selecao se False
-def selecionar_turma(professor, registros=True):
+def selecionar_turma(professor, registros=True): # Talvez mudar para se parecer com selecionar avaliação
     escolhas = []
     for turma_tupla in professor.getTurmas(False):
         escolhas.append(turma_tupla[1]) 
@@ -147,7 +156,7 @@ def selecionar_turma(professor, registros=True):
 
     selecao = input_select("Qual turma:", escolhas)
     if registros:
-        return Turma().buscar_turma(selecao, busca_matricula=False)
+        return (Turma().buscar_turma(selecao, busca_matricula=False), selecao) # Retorna a turma e o nome
     return selecao
 
 def atribuir_nota(aluno):
@@ -187,7 +196,15 @@ def exibir_perfil_staff(staff, nome_classe):
           f"Nome: {staff.getNome(True)}\n")
     if nome_classe == "Professor":
         print(f"Você leciona para {staff.getTurmas()} turmas!")
-        print(f"Você leciona {len(staff.getDisciplinas())} disciplina(s): {staff.getDisciplinas()}")
+        disciplinas = staff.getDisciplinas()
+
+        if len(disciplinas) == 2:
+            print(f"Você leciona {disciplinas[0]} e {disciplinas[1]}.")
+        elif len(disciplinas) > 2:
+            disciplinas_out = f"{', '.join(disciplinas[:-1])} e {disciplinas[-1]}"
+            print(disciplinas_out)
+        else:
+            print(f"Você leciona {', '.join(disciplinas)}")
 
 def ver_perfil(instancia) -> None:
         nome_classe = instancia.__class__.__name__

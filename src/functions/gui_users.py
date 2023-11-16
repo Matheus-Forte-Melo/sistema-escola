@@ -23,7 +23,6 @@ def login(classe):
             print("\033[91m[!]\033[0m Seu nome ou senha estão incorretos")
     return instancia
 
-
 def input_select(mensagem:str, escolhas):
     return inquirer.select(message=mensagem, choices=escolhas).execute()
 
