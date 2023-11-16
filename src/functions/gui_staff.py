@@ -5,25 +5,55 @@ def menu_professor():
     while True:
         printarFiglet(f"{saudacoesTempo(getDataTempo())}, Professor(a)!")
         print(f"Logado(a) como: {professor.getNome(completo=True)}")
-        escolhas = ["Ver Perfil", "Gerenciar Avaliações", "Gerenciar Notas", "Sair do Sistema"]
+        escolhas = ["Ver Perfil", "Gerenciar Avaliações/Notas", "Sair do Sistema"]
         acao = input_select("O que deseja fazer", escolhas)
 
         match acao:
             case "Ver Perfil":
                 ver_perfil(professor)
-            case "Gerenciar Avaliações":
-                menu_gerenciar_avaliacoes(professor)
-            case "Gerenciar Notas":
-                menu_gerenciar_notas(professor)                
+            case "Gerenciar Avaliações/Notas":
+                turma = selecionar_turma(professor, registros=True)
+                if turma[1] != "Voltar":
+                    menu_gerenciar_avaliacoes_notas_1(professor, turma)           
             case "Sair do Sistema":
                 break
+
+def menu_gerenciar_avaliacoes_notas_1(professor, turma):
+    avaliacao = "[!] Não definida. Para prosseguir defina-a"
+    opcoes = ["Trocar turma", "Selecionar avaliação", "Voltar"]
+    while True:
+        print("[!] Selecione uma turma para gerenciar suas notas e avaliações")
+        print(f">>> Turma selecionada: {turma[1]}")
+        print(f">>> Avaliação selecionada: {avaliacao}")
+        acao = input_select("O que deseja fazer:", opcoes)
+        
+        match acao:
+            case "Trocar turma":
+                turma = selecionar_turma(professor, registros=True)
+            case "Selecionar avaliação":
+                avaliacao = selecionar_avaliacao(professor, turma[1])
+            case "Gerenciar avaliação selecionada":
+                pass
+            case "Atribuir nota a avaliação selecionada":
+                pass
+            case "Atribuir nota a avaliação selecionada":
+                pass
+            case "Voltar":
+                break
+
+        if avaliacao == "0-Pular":
+            avaliacao = "[!] Não definida. Para prosseguir defina-a"
+        else:
+            opcoes = ["Selecionar outra avaliação", "Gerenciar avaliação selecionada",
+                        "Atribuir nota a avaliação selecionada", "Voltar"]
+
 
 
 def menu_gerenciar_avaliacoes(professor): 
     turma = selecionar_turma(professor, registros=False)
     professor.buscar_avaliacoes(turma)
    
-    if turma != "Voltar":
+    if turma != "0-Voltar":
         while True:
             print("\033[31m[!] Para mudar a turma volte e entre neste menu novamente.\033[0m")
             print(f"\033[32mGerenciando avaliações da turma: {turma}!\033[0m")
@@ -140,6 +170,7 @@ def menu_gerenciar_notas(professor):
             pass
 
 def selecionar_avaliacao(professor, turma): 
+    print("AAAAAAA")
     acao = completer_aval(professor, turma, "Selecione:", "Pular")
 
     if acao != "0-Pular":
