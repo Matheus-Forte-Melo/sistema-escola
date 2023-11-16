@@ -7,4 +7,6 @@ O banco de dados do sistema por enquanto está hospedado localmente, então por 
 
 Estarei disponibilizando credenciais para uma conta de administrador, tornando assim possível que qualquer um crie uma conta de professor ou aluno para brincar no sistema.
 
+(LOGO RECOMEÇA O DEV. PERAI)
+
 
