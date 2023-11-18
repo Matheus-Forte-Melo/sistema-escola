@@ -10,6 +10,7 @@ from classes.Turma import Turma
 from classes.Avaliacao import Avalicao
 from gui_funcs import *
 from time import sleep
+from InquirerPy.separator import Separator
 
 # Tenta fazer login com o argumento classe recebido. Se sucedido, retorna uma instância dessa classe
 def login(classe):
