@@ -20,7 +20,7 @@ def menu_professor():
 
 def menu_gerenciar_avaliacoes_notas_1(professor, turma):
     avaliacao = "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
-    deletado = False
+    indefinir = False
     opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" , "Trocar turma", Separator(), "Voltar"]
     while True:
         print("[!] Selecione uma turma para gerenciar suas notas e avaliações")
@@ -34,7 +34,7 @@ def menu_gerenciar_avaliacoes_notas_1(professor, turma):
             case "Trocar turma":
                 turma = selecionar_turma(professor, registros=True)
             case "Criar nova avaliação":
-                criar_avaliacao(professor, turma[1])
+                indefinir = criar_avaliacao(professor, turma[1])
             case "Definir avaliação":
                 professor.buscar_avaliacoes(turma[1])
                 avaliacao = selecionar_avaliacao(professor, turma[1])
@@ -42,16 +42,16 @@ def menu_gerenciar_avaliacoes_notas_1(professor, turma):
                 professor.buscar_avaliacoes(turma[1])
                 avaliacao = selecionar_avaliacao(professor, turma[1])
             case "Gerenciar avaliação selecionada":
-                deletado = menu_gerenciar_avaliacoes(professor, turma[1], avaliacao)
+                indefinir = menu_gerenciar_avaliacoes(professor, turma[1], avaliacao)
             case "Atribuir nota a avaliação selecionada":
                 pass
             case "Voltar":
                 break
         
-                # Não tive tempo hoje, mas encontrei um bug crítico aqui. Após excluir uma avaliação o sistema se torna incapaz de redefinir avaliações -> Consertarei em breve.
-        if avaliacao == "0-Pular" or turma == "Voltar" or deletado:
+        if avaliacao == "0-Pular" or turma == "Voltar" or indefinir:
             avaliacao = "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
             opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" , "Trocar turma", Separator(), "Voltar"]
+            indefinir = False
         else:
             opcoes = ["Definir outra avaliação", "Gerenciar avaliação selecionada",
                         "Atribuir nota a avaliação selecionada", "Voltar"]
@@ -60,6 +60,7 @@ def menu_gerenciar_avaliacoes(professor, turma, avaliacao):
     while True:
         professor.buscar_avaliacoes(turma)
         print(professor.avaliacoes)
+        print(avaliacao)
         print(f"\033[32mGerenciando avaliação {avaliacao} da turma: {turma}!\033[0m")
         escolhas = ["Editar Avaliação", "Deletar Avaliação", "Voltar"]
         acao = input_select("O que deseja fazer", escolhas)
@@ -96,7 +97,6 @@ def deletar_avaliacao(professor, turma, avaliacao) -> bool: # Levantar erro caso
     return False
 
 def editar_avaliacao(professor, turma, avaliacao_selecionada): # Levantar erro caso botar algo que não existe
-    
     avl = professor.avaliacoes[int(avaliacao_selecionada[0])-1]
     edit = input_checkbox("Editar", ["Nome", "Descrição"])
     avl_atualizada = input_atualizacoes_aval(list(avl), edit)
@@ -116,11 +116,11 @@ def input_atualizacoes_aval(avaliacao, edit) -> list:
     if "Nome" in output.keys():
         avaliacao[1] = output["Nome"]
     if "Descrição" in output.keys():
-        avaliacao[2] = output["Descrição"]
-    return avaliacao
+        avaliacao[2] = output["Descrição"].strip()
+    return avaliacao # Me superei nessa, unica coisa que tá organizada nessa caralha de código
 
 def listar_avaliacoes(professor, turma):
-    professor.buscar_avaliacoes(turma) # Teóricamente isso ja foi feito | Na vdd precisa, pq atualiza o client size quando usamos essa funcao sempre q listamos. 
+    professor.buscar_avaliacoes(turma)  
     dados = []
     for pos, avaliacao in enumerate(professor.avaliacoes):
         dados.append([str(pos + 1), avaliacao[1], avaliacao[3], avaliacao[2]])
@@ -146,10 +146,11 @@ def criar_avaliacao(professor, nome_turma):
         professor.buscar_avaliacoes(nome_turma)
         print("--> Criação concluída! <---")
         sleep(1)
+        return True
 
     print("--> Voltando! <---")
     sleep(0.5)
-    del(avaliacao)
+    return False
     
 def menu_gerenciar_notas(professor):
     turma = selecionar_turma(professor, registros=True) 
@@ -178,8 +179,8 @@ def selecionar_avaliacao(professor, turma):
         if avl[1] == acao[corte_indice:]:
             avl_existe = True
             break
-           
-    if acao != "0-Pular" and avl_existe:
+    
+    if avl_existe or acao == "0-Pular":
         return acao    
     return "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
     
