@@ -33,7 +33,7 @@ def menu_gerenciar_avaliacoes_notas_1(professor, turma):
         match acao:
             case "Trocar turma":
                 turma = selecionar_turma(professor, registros=True)
-            case "Criar avaliação":
+            case "Criar nova avaliação":
                 criar_avaliacao(professor, turma[1])
             case "Definir avaliação":
                 professor.buscar_avaliacoes(turma[1])
@@ -49,9 +49,8 @@ def menu_gerenciar_avaliacoes_notas_1(professor, turma):
                 break
         
                 # Não tive tempo hoje, mas encontrei um bug crítico aqui. Após excluir uma avaliação o sistema se torna incapaz de redefinir avaliações -> Consertarei em breve.
-
         if avaliacao == "0-Pular" or turma == "Voltar" or deletado:
-            avaliacao = "[!] Não definida. Para prosseguir defina-a"
+            avaliacao = "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
             opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" , "Trocar turma", Separator(), "Voltar"]
         else:
             opcoes = ["Definir outra avaliação", "Gerenciar avaliação selecionada",
@@ -170,12 +169,19 @@ def menu_gerenciar_notas(professor):
             pass
 
 def selecionar_avaliacao(professor, turma): 
-    print("AAAAAAA")
-    acao = completer_aval(professor, turma, "Selecione:", "Pular")
-
-    if acao != "0-Pular":
+    acao = completer_aval(professor, turma, "Selecione:", "Pular").strip()
+    avl_existe = False
+    corte_indice = 2 if len(professor.avaliacoes) < 10 else 3 
+    # Corte do índice é igual a 2 se a quantidade de avaliações é menor que dez, se não, é 3 
+    
+    for avl in professor.avaliacoes:
+        if avl[1] == acao[corte_indice:]:
+            avl_existe = True
+            break
+           
+    if acao != "0-Pular" and avl_existe:
         return acao    
-    return "Indefinida"
+    return "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
     
 
 # Seleciona uma turma. Retorna os registros dela se registros = True e apenas a selecao se False
