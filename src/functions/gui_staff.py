@@ -14,19 +14,21 @@ def menu_professor():
             case "Gerenciar Avaliações/Notas":
                 turma = selecionar_turma(professor, registros=True)
                 if turma[1] != "Voltar":
-                    menu_gerenciar_avaliacoes_notas_1(professor, turma)           
+                    menu_gerenciar_avaliacoes_notas(professor, turma)           
             case "Sair do Sistema":
                 break
 
-def menu_gerenciar_avaliacoes_notas_1(professor, turma):
+def menu_gerenciar_avaliacoes_notas(professor, turma):
+    acao = None
     avaliacao = "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
     indefinir = False
-    opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" , "Trocar turma", Separator(), "Voltar"]
+    opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" , "Trocar turma", Separator(), "Sair"]
+    
     while True:
         print("[!] Selecione uma turma para gerenciar suas notas e avaliações")
         print(f"\033[33m>>> Turma selecionada: {turma[1]}\033[0m")
         sleep(0.50)
-        print(f"\033[33m>>> Avaliação selecionada: {avaliacao}\033[0m")
+        if acao != "Voltar": print(f"\033[33m>>> Avaliação selecionada: {avaliacao}\033[0m")
         sleep(0.65)
         acao = input_select("O que deseja fazer:", opcoes)
         
@@ -41,33 +43,48 @@ def menu_gerenciar_avaliacoes_notas_1(professor, turma):
             case "Definir outra avaliação":
                 professor.buscar_avaliacoes(turma[1])
                 avaliacao = selecionar_avaliacao(professor, turma[1])
-            case "Gerenciar avaliação selecionada":
+            case "Gerenciar avaliação":
                 indefinir = menu_gerenciar_avaliacoes(professor, turma[1], avaliacao)
-            case "Atribuir nota a avaliação selecionada":
+            case "Atribuir nota à avaliação":
                 pass
             case "Voltar":
+                opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" ,
+                           "Trocar turma", Separator(), "Sair"]
+                continue
+            case "Sair":
                 break
         
-        if avaliacao == "0-Pular" or turma == "Voltar" or indefinir:
+        if avaliacao == "0-Pular" or turma[1] == "Voltar" or indefinir:
             avaliacao = "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
-            opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" , "Trocar turma", Separator(), "Voltar"]
+            opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" ,
+                       "Trocar turma", Separator(), "Sair"]
             indefinir = False
         else:
-            opcoes = ["Definir outra avaliação", "Gerenciar avaliação selecionada",
-                        "Atribuir nota a avaliação selecionada", "Voltar"]
+            opcoes = ["Definir outra avaliação", "Gerenciar avaliação", "Atribuir nota à avaliação",
+                       Separator(), "Voltar"]
 
 def menu_gerenciar_avaliacoes(professor, turma, avaliacao): 
+    confirmar = False
+    avaliacao_editada = None
     while True:
         professor.buscar_avaliacoes(turma)
-        print(professor.avaliacoes)
-        print(avaliacao)
-        print(f"\033[32mGerenciando avaliação {avaliacao} da turma: {turma}!\033[0m")
+        if avaliacao_editada == None:
+            print(f"\033[32mGerenciando avaliação {avaliacao}\033[0m") # da turma: {turma}!\033[0m")
+        else:
+            print(f"\033[32mGerenciando avaliação {avaliacao} | Nome editado: {avaliacao_editada}\033[0m")
+
         escolhas = ["Editar Avaliação", "Deletar Avaliação", "Voltar"]
         acao = input_select("O que deseja fazer", escolhas)
+
+        if acao == "Editar Avaliação":
+            confirmar = input_confirm(f"Quer mesmo {acao.lower()}?")
+        
+        if not confirmar and acao not in ("Voltar", "Deletar Avaliação"):
+            continue
         
         match acao:
             case "Editar Avaliação":
-                editar_avaliacao(professor, turma, avaliacao)
+                avaliacao_editada = editar_avaliacao(professor, turma, avaliacao)
             case "Deletar Avaliação":
                 deletado = deletar_avaliacao(professor, turma, avaliacao)
                 return deletado
@@ -107,6 +124,7 @@ def editar_avaliacao(professor, turma, avaliacao_selecionada): # Levantar erro c
     sleep(1)
     print("--> Voltando! <---")
     sleep(0.35)
+    return avl_atualizada[1] # nome
 
 def input_atualizacoes_aval(avaliacao, edit) -> list:
     output = {}
@@ -170,16 +188,21 @@ def menu_gerenciar_notas(professor):
             pass
 
 def selecionar_avaliacao(professor, turma): 
-    acao = completer_aval(professor, turma, "Selecione:", "Pular").strip()
+    acao = completer_aval(professor, turma, "Selecione:", "Pular")
     avl_existe = False
-    corte_indice = 2 if len(professor.avaliacoes) < 10 else 3 
-    # Corte do índice é igual a 2 se a quantidade de avaliações é menor que dez, se não, é 3 
+    corte_indice = 1 # Já contando com o travessão
+
+    for i in acao:
+        if i.isnumeric():
+            corte_indice += 1
+        else:
+            break
     
     for avl in professor.avaliacoes:
         if avl[1] == acao[corte_indice:]:
             avl_existe = True
             break
-    
+
     if avl_existe or acao == "0-Pular":
         return acao    
     return "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
@@ -193,9 +216,11 @@ def selecionar_turma(professor, registros=True): # Talvez mudar para se parecer 
     escolhas.append("Voltar")
 
     selecao = input_select("Qual turma:", escolhas)
+    #voltar
+
     if registros:
         return (Turma().buscar_turma(selecao, busca_matricula=False), selecao) # Retorna a turma e o nome
-    return selecao
+    return selecao 
 
 def atribuir_nota(aluno):
     while True:
