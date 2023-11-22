@@ -35,7 +35,10 @@ def menu_gerenciar_avaliacoes_notas_1(professor, turma):
                 turma = selecionar_turma(professor, registros=True)
             case "Criar avaliação":
                 criar_avaliacao(professor, turma[1])
-            case "Selecionar avaliação":
+            case "Definir avaliação":
+                professor.buscar_avaliacoes(turma[1])
+                avaliacao = selecionar_avaliacao(professor, turma[1])
+            case "Definir outra avaliação":
                 professor.buscar_avaliacoes(turma[1])
                 avaliacao = selecionar_avaliacao(professor, turma[1])
             case "Gerenciar avaliação selecionada":
@@ -45,11 +48,13 @@ def menu_gerenciar_avaliacoes_notas_1(professor, turma):
             case "Voltar":
                 break
         
+                # Não tive tempo hoje, mas encontrei um bug crítico aqui. Após excluir uma avaliação o sistema se torna incapaz de redefinir avaliações -> Consertarei em breve.
+
         if avaliacao == "0-Pular" or turma == "Voltar" or deletado:
             avaliacao = "[!] Não definida. Para prosseguir defina-a"
             opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" , "Trocar turma", Separator(), "Voltar"]
         else:
-            opcoes = ["Selecionar outra avaliação", "Gerenciar avaliação selecionada",
+            opcoes = ["Definir outra avaliação", "Gerenciar avaliação selecionada",
                         "Atribuir nota a avaliação selecionada", "Voltar"]
 
 def menu_gerenciar_avaliacoes(professor, turma, avaliacao): 
