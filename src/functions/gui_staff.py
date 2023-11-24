@@ -76,12 +76,13 @@ def prepara_lista_notas(professor, turma, avaliacao):
         if codigo in turma_dict:
             turma_dict[codigo]['nota'] = nota
 
-    return [[codigo, info['nome'], info['sobrenome'], info.get('nota', 'Sem nota')] for codigo, info in turma_dict.items()]
+    return ([[codigo, info['nome'], info['sobrenome'], info.get('nota', 'Sem nota')] for codigo, info in turma_dict.items()], professor.avaliacoes[pos-1][0])
 
 def menu_atribuir_nota(professor, turma, avaliacao):
     turma_lista = prepara_lista_notas(professor, turma, avaliacao)
-    tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma_lista)
+    tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma_lista[0])
     printarTabela(tabela)
+    id_avl = turma_lista[1] 
     
     # Printa todos os alunos da turma, seria interessante se ele mostrasse as notas dos alunos dessa avaliação aqui
     print(f"Avaliação selecionada: {avaliacao}")
@@ -90,24 +91,35 @@ def menu_atribuir_nota(professor, turma, avaliacao):
     
     match selecao:
         case "Atribuir Nota à Turma":
-            atribuir_notas_turma(turma[1])
+            atribuir_notas_turma(turma_lista, id_avl)
         case "Atribuir Nota Individual":
             pass
 
-def atribuir_nota(aluno):
+def atribuir_nota(aluno, avaliacao):
     while True:
         try:
             print(f"\033[32m[!]\033[0m Atribuindo nota a \033[32m{aluno[1]} {aluno[2]}.\033[0m")
             nota = float(input("Digite a nota: "))
-            assert nota > 0 and nota <= 10
+            assert 0 <= nota <= 10, "A nota deve estar no intervalo de 0 a 10."
+            nova_nota = Notas(nota, avaliacao, aluno[0], datetime.now().strftime("%Y-%m-%d"))
+            nova_nota.publicar()
             break
-        except Exception:
-            print("\033[31m[!] Erro ao inserir nota! Tente Novamente.\033[0m")
+        except ValueError:
+            print("\033[31m[!] Erro ao inserir nota! Certifique-se de digitar um número.\033[0m")
+            sleep(1)
+        except AssertionError as e:
+            print(f"\033[31m[!] Erro ao inserir nota! {e} Tente novamente.\033[0m")
+            sleep(1)
 
-def atribuir_notas_turma(turma):
-    comentario = input_text("Descreveva a avaliação: ", simbolo="!")
+def atribuir_notas_turma(turma, avaliacao):
+    #comentario = input_text("Descreva a avaliação: ", simbolo="!")
     for aluno in turma:
-        atribuir_nota(aluno)
+        nota = aluno[3]
+        if isinstance(str, nota): # Arrumar isso
+            atribuir_nota(aluno, avaliacao)
+        else:
+            print(".")
+            sleep(0.15)
 
 def atribuir_nota_aluno():
     pass

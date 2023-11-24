@@ -1,9 +1,22 @@
 from EntidadeDB import EntidadeDB
 
 class Notas(EntidadeDB):
-    def __init__(self) -> None:
-        pass
+    def __init__(self, nota=0, avaliacao=0, matricula="", data_lancamento="") -> None:
+        self.nota = nota
+        self.avaliacao = avaliacao
+        self.matricula = matricula
+        self.data_lancamento = data_lancamento
     
+
+    def publicar(self):
+        query = "CALL inserir_notas(%s, %s, %s, %s)"
+        values = (self.nota, self.avaliacao, self.matricula, self.data_lancamento)
+        self._iniciarConn()
+        self._cursor.execute(query, values)
+        self._conn.commit()
+        self._fecharConn()
+
+
     def buscar_notas_matricula(self, matricula, disciplina):
         query = "CALL busca_notas_matricula(%s, %s)"
         values = (matricula, disciplina)
