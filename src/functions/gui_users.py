@@ -42,5 +42,6 @@ def input_checkbox(mensagem:str, escolhas):
                              invalid_message="Deve ter selecionado pelo menos 1",
                              instruction="[BARRA DE ESPAÇO] para selecionar e [ENTER] para confirmar ").execute()
 
+
             
 

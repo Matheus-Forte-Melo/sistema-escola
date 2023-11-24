@@ -34,6 +34,15 @@ def criarTabela(header: list, colunas) -> AsciiTable:
     
     return AsciiTable(dados_tabela)
 
+def define_corte_indice(string, comeco = 1):
+    corte_indice = comeco  
+    for i in string:
+            if i.isnumeric():
+                corte_indice += 1
+            else:
+                break
+    return corte_indice
+
 def printarTabela(tabela:AsciiTable) -> None:
     print(tabela.table)
 

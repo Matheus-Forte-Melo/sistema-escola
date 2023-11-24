@@ -39,13 +39,15 @@ def menu_gerenciar_avaliacoes_notas(professor, turma):
             case "Definir avaliação":
                 professor.buscar_avaliacoes(turma[1])
                 avaliacao = selecionar_avaliacao(professor, turma[1])
+                if avaliacao == "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m":
+                     indefinir = True
             case "Definir outra avaliação":
                 professor.buscar_avaliacoes(turma[1])
                 avaliacao = selecionar_avaliacao(professor, turma[1])
             case "Gerenciar avaliação":
                 indefinir = menu_gerenciar_avaliacoes(professor, turma[1], avaliacao)
             case "Atribuir nota à avaliação":
-                pass
+                menu_atribuir_nota(professor, turma, avaliacao)
             case "Voltar":
                 opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação" ,
                            "Trocar turma", Separator(), "Sair"]
@@ -53,13 +55,62 @@ def menu_gerenciar_avaliacoes_notas(professor, turma):
             case "Sair":
                 break
         
-        if avaliacao == "0-Pular" or turma[1] == "Voltar" or indefinir:
+        if avaliacao == "0-Pular" or indefinir:
             avaliacao = "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
             opcoes = ["Definir avaliação", Separator(), "Criar nova avaliação", Separator(), "Sair"]
             indefinir = False
         else:
             opcoes = ["Definir outra avaliação", "Gerenciar avaliação", "Atribuir nota à avaliação",
                        Separator(), "Voltar"]
+
+def prepara_lista_notas(professor, turma, avaliacao):
+    professor.buscar_avaliacoes(turma[1])
+    qnt_indices = define_corte_indice(avaliacao, comeco=0)       
+    pos = int(avaliacao[:qnt_indices])
+    avl = Avalicao(id=professor.avaliacoes[pos-1][0])
+    notas = avl.buscar_notas()
+    
+    turma_dict = {aluno[0]: {'nome': aluno[1], 'sobrenome': aluno[2]} for aluno in turma[0]}
+
+    for codigo, nota in notas:
+        if codigo in turma_dict:
+            turma_dict[codigo]['nota'] = nota
+
+    return [[codigo, info['nome'], info['sobrenome'], info.get('nota', 'Sem nota')] for codigo, info in turma_dict.items()]
+
+def menu_atribuir_nota(professor, turma, avaliacao):
+    turma_lista = prepara_lista_notas(professor, turma, avaliacao)
+    tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma_lista)
+    printarTabela(tabela)
+    
+    # Printa todos os alunos da turma, seria interessante se ele mostrasse as notas dos alunos dessa avaliação aqui
+    print(f"Avaliação selecionada: {avaliacao}")
+    escolhas = ["Atribuir Nota Individual", "Atribuir Nota à Turma", "Editar Nota", "Voltar"]
+    selecao = input_select("O que deseja fazer:", escolhas)
+    
+    match selecao:
+        case "Atribuir Nota à Turma":
+            atribuir_notas_turma(turma[1])
+        case "Atribuir Nota Individual":
+            pass
+
+def atribuir_nota(aluno):
+    while True:
+        try:
+            print(f"\033[32m[!]\033[0m Atribuindo nota a \033[32m{aluno[1]} {aluno[2]}.\033[0m")
+            nota = float(input("Digite a nota: "))
+            assert nota > 0 and nota <= 10
+            break
+        except Exception:
+            print("\033[31m[!] Erro ao inserir nota! Tente Novamente.\033[0m")
+
+def atribuir_notas_turma(turma):
+    comentario = input_text("Descreveva a avaliação: ", simbolo="!")
+    for aluno in turma:
+        atribuir_nota(aluno)
+
+def atribuir_nota_aluno():
+    pass
 
 def menu_gerenciar_avaliacoes(professor, turma, avaliacao): 
     confirmar = False
@@ -167,34 +218,13 @@ def criar_avaliacao(professor, nome_turma):
     print("--> Voltando! <---")
     sleep(0.5)
     return False
-    
-def menu_gerenciar_notas(professor):
-    turma = selecionar_turma(professor, registros=True) 
-    avaliacao = selecionar_avaliacao(professor, turma[1])
-    tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma[0])
-    printarTabela(tabela)
-    print(f"Avaliação selecionada: {avaliacao}")
-    escolhas = ["Selecionar outra avaliação","Atribuir Nota Individual", "Atribuir Nota à Turma","Editar Nota", "Voltar"]
-    selecao = input_select("O que deseja fazer:", escolhas)
-    
-    match selecao:
-        case "Selecionar outra avaliação":
-            selecionar_avaliacao(professor, turma[1])
-        case "Atribuir Nota à Turma":
-            atribuir_notas_turma(turma[1])
-        case "Atribuir Nota Individual":
-            pass
 
 def selecionar_avaliacao(professor, turma): 
     acao = completer_aval(professor, turma, "Selecione:", "Pular")
     avl_existe = False
     corte_indice = 1 # Já contando com o travessão
 
-    for i in acao:
-        if i.isnumeric():
-            corte_indice += 1
-        else:
-            break
+    corte_indice = define_corte_indice(acao)  
     
     for avl in professor.avaliacoes:
         if avl[1] == acao[corte_indice:]:
@@ -204,7 +234,6 @@ def selecionar_avaliacao(professor, turma):
     if avl_existe or acao == "0-Pular":
         return acao    
     return "\033[31m[!] Não definida. Para prosseguir defina-a\033[0m"
-    
 
 # Seleciona uma turma. Retorna os registros dela se registros = True e apenas a selecao se False
 def selecionar_turma(professor, registros=True): # Talvez mudar para se parecer com selecionar avaliação
@@ -214,29 +243,10 @@ def selecionar_turma(professor, registros=True): # Talvez mudar para se parecer 
     escolhas.append("Voltar")
 
     selecao = input_select("Qual turma:", escolhas)
-    #voltar
 
     if registros:
         return (Turma().buscar_turma(selecao, busca_matricula=False), selecao) # Retorna a turma e o nome
     return selecao 
-
-def atribuir_nota(aluno):
-    while True:
-        try:
-            print(f"\033[32m[!]\033[0m Atribuindo nota a \033[32m{aluno[1]} {aluno[2]}.\033[0m")
-            nota = float(input("Digite a nota: "))
-            assert nota > 0 and nota <= 10
-            break
-        except Exception:
-            print("\033[31m[!] Erro ao inserir nota! Tente Novamente.\033[0m")
-
-def atribuir_notas_turma(turma):
-    comentario = input_text("Descreveva a avaliação: ", simbolo="!")
-    for aluno in turma:
-        atribuir_nota(aluno)
-
-def atribuir_nota_aluno():
-    pass
 
 def menu_administrador():
     adm = login(classe=Administrador())

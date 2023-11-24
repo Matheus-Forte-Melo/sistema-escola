@@ -9,6 +9,11 @@ class Avalicao(EntidadeDB):
         self.turma = turma # Não podem existir duas turmas de nome igual
         self.disciplina = disciplina # Não podem existir duas disciplinas de nome igual
 
+    def buscar_notas(self):
+        query = "CALL buscar_notas_avaliacao(%s)"
+        values = (self.id,)
+        return self.realizarBusca(query, values)
+
     def criar_avaliacao(self) -> None:
         query = "CALL criar_avaliacao(%s, %s, %s, %s, %s)"
         values = (self.nome, self.descricao, self.idProfessor, self.turma, self.disciplina)

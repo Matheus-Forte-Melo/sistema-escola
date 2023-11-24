@@ -18,7 +18,8 @@ class Notas(EntidadeDB):
             output.append([pos + 1, str(a[0]), a[1], a[2]])
             comentarios.append(a[3])
         return (output, comentarios)
-                
+    
+    # Atualmente não sendo utilizado em lugar algum
     def notas_para_dict(self, notas):
         for nota in notas:
             if nota[1] not in self.notas:
@@ -34,6 +35,8 @@ class Notas(EntidadeDB):
         for disciplina in disciplinas:
             output.append(disciplina[0])
         return output
+
+
 
 # print("="*25, "\n")
 # for pos, comentario in enumerate(comentarios):
