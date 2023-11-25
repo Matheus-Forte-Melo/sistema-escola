@@ -79,23 +79,38 @@ def prepara_lista_notas(professor, turma, avaliacao):
     return ([[codigo, info['nome'], info['sobrenome'], info.get('nota', 'Sem nota')] for codigo, info in turma_dict.items()], professor.avaliacoes[pos-1][0])
 
 def menu_atribuir_nota(professor, turma, avaliacao):
-    turma_lista = prepara_lista_notas(professor, turma, avaliacao)
-    tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma_lista[0])
-    printarTabela(tabela)
-    id_avl = turma_lista[1] 
-    
-    # Printa todos os alunos da turma, seria interessante se ele mostrasse as notas dos alunos dessa avaliação aqui
-    print(f"Avaliação selecionada: {avaliacao}")
-    escolhas = ["Atribuir Nota Individual", "Atribuir Nota à Turma", "Editar Nota", "Voltar"]
-    selecao = input_select("O que deseja fazer:", escolhas)
-    
-    match selecao:
-        case "Atribuir Nota à Turma":
-            atribuir_notas_turma(turma_lista, id_avl)
-        case "Atribuir Nota Individual":
-            pass
+    while True:
+        turma_lista = prepara_lista_notas(professor, turma, avaliacao)
+        tabela = criarTabela(["Matricula", "Nome do Aluno", "Sobrenome do Aluno"], turma_lista[0])
+        printarTabela(tabela)
+        id_avl = turma_lista[1] 
+        
+        # Printa todos os alunos da turma, seria interessante se ele mostrasse as notas dos alunos dessa avaliação aqui
+        print(f"Avaliação selecionada: {avaliacao}")
+        escolhas = ["Atribuir Nota (SELEÇÂO)", "Atribuir Nota (TODOS)", "Editar Notas", "Voltar"]
+        selecao = input_select("O que deseja fazer:", escolhas)
+        
+        match selecao:
+            case "Atribuir Nota (TODOS)":
+                atribuir_notas_turma(turma_lista, id_avl)
+            case "Atribuir Nota (SELEÇÂO)":
+                atribuir_nota_aluno(turma_lista, id_avl)
+            case "Editar Notas":
+                editar_notas(turma_lista, id_avl)
+            case "Voltar":  
+                break
 
-def atribuir_nota(aluno, avaliacao):
+def editar_notas(turma, avaliacao):
+    alunos_com_nota = [] # Apenas nome e matricula, usarei avaliação turma para resgatar o correspondente
+    for aluno in turma[0]:
+        nota = aluno[3]
+        if not isinstance(nota, str): # Arrumar isso
+            alunos_com_nota.append([aluno[0], aluno[1], aluno[2]]) # Se fica vazia da erro, consertar isso
+
+    escolhas = input_checkbox("Selecione os alunos: ", alunos_com_nota)
+    escolhas = list(escolhas)
+
+def atribuir_nota(aluno, avaliacao): # aluno?
     while True:
         try:
             print(f"\033[32m[!]\033[0m Atribuindo nota a \033[32m{aluno[1]} {aluno[2]}.\033[0m")
@@ -112,17 +127,29 @@ def atribuir_nota(aluno, avaliacao):
             sleep(1)
 
 def atribuir_notas_turma(turma, avaliacao):
-    #comentario = input_text("Descreva a avaliação: ", simbolo="!")
-    for aluno in turma:
+    for aluno in turma[0]:
         nota = aluno[3]
-        if isinstance(str, nota): # Arrumar isso
+        if isinstance(nota, str): # Arrumar isso
             atribuir_nota(aluno, avaliacao)
         else:
-            print(".")
-            sleep(0.15)
+            print(f"\033[31m[!]\033[0m {aluno[1]} {aluno[2]} já possui nota!")
+            sleep(0.10)
 
-def atribuir_nota_aluno():
-    pass
+def atribuir_nota_aluno(turma, avaliacao):
+    alunos_sem_nota = [] # Apenas nome e matricula, usarei avaliação turma para resgatar o correspondente
+    for aluno in turma[0]:
+        nota = aluno[3]
+        if isinstance(nota, str): # Arrumar isso
+            alunos_sem_nota.append([aluno[0], aluno[1], aluno[2]]) # Se fica vazia da erro, consertar isso
+
+    escolhas = input_checkbox("Selecione os alunos: ", alunos_sem_nota)
+    escolhas = list(escolhas)
+
+    for aluno in escolhas:
+        atribuir_nota(aluno, avaliacao)
+    
+    
+    
 
 def menu_gerenciar_avaliacoes(professor, turma, avaliacao): 
     confirmar = False
