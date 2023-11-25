@@ -101,23 +101,32 @@ def menu_atribuir_nota(professor, turma, avaliacao):
                 break
 
 def editar_notas(turma, avaliacao):
-    alunos_com_nota = [] # Apenas nome e matricula, usarei avaliação turma para resgatar o correspondente
+    alunos_com_nota = []
     for aluno in turma[0]:
         nota = aluno[3]
         if not isinstance(nota, str): # Arrumar isso
-            alunos_com_nota.append([aluno[0], aluno[1], aluno[2]]) # Se fica vazia da erro, consertar isso
+            alunos_com_nota.append([aluno[0], aluno[1], aluno[2]]) 
 
-    escolhas = input_checkbox("Selecione os alunos: ", alunos_com_nota)
-    escolhas = list(escolhas)
+    try:
+        escolhas = input_checkbox("Selecione os alunos: ", alunos_com_nota)
+        escolhas = list(escolhas)
+        for aluno in escolhas:
+            atribuir_nota(aluno, avaliacao, ["Editando nota de:", "Digite a nova nota:"], True)
+    except InvalidArgument:
+        print("[!] Nenhuma nota foi atribuida, logo, não existem notas para editar.")
+        print("--> Voltando <--")
+        sleep(1.5)
 
-def atribuir_nota(aluno, avaliacao): # aluno?
+def atribuir_nota(aluno, avaliacao, mensagens, atualizar): # aluno?
+    mensagem_pre_input = mensagens[0]
+    mensagem_input = mensagens[1]
     while True:
         try:
-            print(f"\033[32m[!]\033[0m Atribuindo nota a \033[32m{aluno[1]} {aluno[2]}.\033[0m")
-            nota = float(input("Digite a nota: "))
+            print(f"\033[32m[!]\033[0m {mensagem_pre_input} \033[32m{aluno[1]} {aluno[2]}.\033[0m")
+            nota = float(input(f"{mensagem_input} "))
             assert 0 <= nota <= 10, "A nota deve estar no intervalo de 0 a 10."
             nova_nota = Notas(nota, avaliacao, aluno[0], datetime.now().strftime("%Y-%m-%d"))
-            nova_nota.publicar()
+            nova_nota.publicar(atualizar)
             break
         except ValueError:
             print("\033[31m[!] Erro ao inserir nota! Certifique-se de digitar um número.\033[0m")
@@ -130,11 +139,11 @@ def atribuir_notas_turma(turma, avaliacao):
     for aluno in turma[0]:
         nota = aluno[3]
         if isinstance(nota, str): # Arrumar isso
-            atribuir_nota(aluno, avaliacao)
+            atribuir_nota(aluno, avaliacao, ["Atribuindo nota a(à):", "Digite a nova:"], False)
         else:
             print(f"\033[31m[!]\033[0m {aluno[1]} {aluno[2]} já possui nota!")
-            sleep(0.10)
-
+            sleep(0.20)
+        
 def atribuir_nota_aluno(turma, avaliacao):
     alunos_sem_nota = [] # Apenas nome e matricula, usarei avaliação turma para resgatar o correspondente
     for aluno in turma[0]:
@@ -142,15 +151,16 @@ def atribuir_nota_aluno(turma, avaliacao):
         if isinstance(nota, str): # Arrumar isso
             alunos_sem_nota.append([aluno[0], aluno[1], aluno[2]]) # Se fica vazia da erro, consertar isso
 
-    escolhas = input_checkbox("Selecione os alunos: ", alunos_sem_nota)
-    escolhas = list(escolhas)
-
-    for aluno in escolhas:
-        atribuir_nota(aluno, avaliacao)
-    
-    
-    
-
+    try:
+        escolhas = input_checkbox("Selecione os alunos: ", alunos_sem_nota)
+        escolhas = list(escolhas)
+        for aluno in escolhas:
+            atribuir_nota(aluno, avaliacao, ["Atribuindo nota a(à):", "Digite a nova:"], False)
+    except InvalidArgument:
+        print("[!] Não há alunos para atribuir nota.")
+        print("--> Voltando <--")
+        sleep(1)
+        
 def menu_gerenciar_avaliacoes(professor, turma, avaliacao): 
     confirmar = False
     avaliacao_editada = None

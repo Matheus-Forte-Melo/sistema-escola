@@ -7,15 +7,18 @@ class Notas(EntidadeDB):
         self.matricula = matricula
         self.data_lancamento = data_lancamento
     
-
-    def publicar(self):
-        query = "CALL inserir_notas(%s, %s, %s, %s)"
+    # Muita repetição aqui também
+    def publicar(self, update=False): 
+        if not update:
+            query = "CALL inserir_notas(%s, %s, %s, %s)"
+        else:
+            query = "CALL atualizar_notas(%s, %s, %s, %s)"
         values = (self.nota, self.avaliacao, self.matricula, self.data_lancamento)
+        
         self._iniciarConn()
         self._cursor.execute(query, values)
         self._conn.commit()
         self._fecharConn()
-
 
     def buscar_notas_matricula(self, matricula, disciplina):
         query = "CALL busca_notas_matricula(%s, %s)"
