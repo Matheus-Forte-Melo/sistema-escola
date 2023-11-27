@@ -299,18 +299,38 @@ def selecionar_turma(professor, registros=True): # Talvez mudar para se parecer 
 
 def menu_administrador():
     adm = login(classe=Administrador())
+    escolhas = ["Ver Perfil", "Gerenciar Alunos", "Gerenciar Turmas", "Gerenciar Notas", "Sair do Sistema"] # N tava aq
     while True:
         printarFiglet(f"{saudacoesTempo(getDataTempo())}, Admin!")
         print(f"Logado(a) como: {adm.getNome(completo=True)}")
-        escolhas = ["Ver Perfil", "Gerenciar Alunos", "Gerenciar Turmas", "Gerenciar Notas", "Sair do Sistema"]
         acao = input_select("O que deseja fazer", escolhas)
 
         match acao:
             case "Ver Perfil":
-                ver_perfil(adm)                
+                ver_perfil(adm)
+            case "Gerenciar Alunos":
+                menu_gerenciar_alunos(adm)                
             case "Sair do Sistema":
                 break
     
+def menu_gerenciar_alunos(adm):
+    escolhas = ["Matricular Estudante", "Buscar/Editar Estudante", "Voltar"]
+    while True:
+        acao = input_select("O que deseja fazer: ", escolhas)
+
+        match acao:
+            case "Matricular Estudante":
+                matricular_estudante(adm)
+                pass     
+            case "Buscar/Editar Estudante":
+                #buscar_aluno
+                pass
+            case "Voltar":
+                break
+
+def matricular_estudante(adm):
+    pass
+
 def exibir_perfil_staff(staff, nome_classe):
     print(f"Id: {staff.getId()} \n", end=""
           f"Nome: {staff.getNome(True)}\n")

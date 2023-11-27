@@ -17,7 +17,12 @@ class Administrador(UsuarioDB):
         if completo:
             return f"{self.primeiro_nome} {self.sobrenome}"
         return self.primeiro_nome
-        
+    
+    def cadastrar_responsaveis(self):
+        pass
+
+    def matricular_estudante(self):
+        query = "matricular_aluno(%s, %s, %s, %s, %s, %s)"
 
 
          
