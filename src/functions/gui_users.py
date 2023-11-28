@@ -44,5 +44,24 @@ def input_checkbox(mensagem:str, escolhas):
                              instruction="[BARRA DE ESPAÇO] para selecionar e [ENTER] para confirmar ").execute()
 
 
-            
+def ver_perfil(instancia) -> None:
+        nome_classe = instancia.__class__.__name__
+        exibir_perfil_staff(instancia, nome_classe)
+        printarLinha(40)
+        acao = input_select("O que deseja fazer", ["Voltar"])
+
+def exibir_perfil_staff(staff, nome_classe):
+    print(f"Id: {staff.getId()} \n", end=""
+          f"Nome: {staff.getNome(True)}\n")
+    if nome_classe == "Professor":
+        print(f"Você leciona para {staff.getTurmas()} turmas!")
+        disciplinas = staff.getDisciplinas()
+
+        if len(disciplinas) == 2:
+            print(f"Você leciona {disciplinas[0]} e {disciplinas[1]}.")
+        elif len(disciplinas) > 2:
+            disciplinas_out = f"{', '.join(disciplinas[:-1])} e {disciplinas[-1]}"
+            print(disciplinas_out)
+        else:
+            print(f"Você leciona {', '.join(disciplinas)}")
 

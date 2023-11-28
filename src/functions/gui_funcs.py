@@ -43,6 +43,12 @@ def define_corte_indice(string, comeco = 1):
                 break
     return corte_indice
 
+def separa_nome_sobrenome(string):
+    nome_separado = string.split()
+    primeiro_nome = nome_separado[0]
+    sobrenome = " ".join(nome_separado[1:])
+    return (primeiro_nome, sobrenome)
+
 def printarTabela(tabela:AsciiTable) -> None:
     print(tabela.table)
 
