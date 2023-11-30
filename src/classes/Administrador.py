@@ -21,7 +21,7 @@ class Administrador(UsuarioDB):
     def cadastrar_responsaveis(self):
         pass
 
-    def matricular_estudante(self, aluno): # Aluno ----> Instância de aluno
+    def matricular_estudante(self, aluno): # Aluno ----> vai receber Instância de aluno
         query = "matricular_aluno(%s, %s, %s, %s, %s, %s)"
         #values = (aluno.get)
 

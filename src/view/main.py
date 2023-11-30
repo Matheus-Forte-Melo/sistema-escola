@@ -4,7 +4,7 @@ path.append("src\\functions") # Por enquanto vai funcionar, mas creio que isso n
 
 from functions import gui_adm
 from functions import gui_aluno
-from functions import gui_staff
+from functions import gui_prof
 from functions import gui_funcs
 
 # Confirmação, talvez mude de lugar mais tarde e transforme numa função
@@ -18,7 +18,7 @@ match usuario:
     case "Aluno":
         gui_aluno.menu_aluno()
     case "Professor":
-        gui_staff.menu_professor()
+        gui_prof.menu_professor()
     case "Administrador":
         gui_adm.menu_administrador()
 

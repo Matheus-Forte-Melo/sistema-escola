@@ -1,13 +1,17 @@
-turma = [('20231015', 'Kauã', 'Nazário'), ('20231022000', 'Maria', 'Eduarda'), ('20231014', 'Matheus', 'Forte de Melo'), ('20231018', 'Thiago', 'Alessandro Batista')]
-notas = [('20231015', '9.00'), ('20231014', '10.00')]
+from sys import path
+path.append("D:\\GitHub\\sistema-escola")
+path.append("D:\\GitHub\\sistema-escola\\src\\classes")
+path.append("D:\\GitHub\\sistema-escola\\src\\functions")
 
-turma_dict = {}
-turma_dict = {aluno[0]: {'nome': aluno[1], 'sobrenome': aluno[2]} for aluno in turma}
+from src.classes.Administrador import Administrador
+from src.classes.Turma import Turma
+from src.functions import gui_adm
+from src.functions.gui_users import input_text
 
-for codigo, nota in notas:
-    if codigo in turma_dict:
-        turma_dict[codigo]['nota'] = nota
+adm = Administrador().realizarLogin(nome="Nivaldo Rosbevino", senha="lgbtq12345")
+gui_adm.matricular_estudante(adm)
+
+     
 
 
-turma_lista = [[codigo, info['nome'], info['sobrenome'], info.get('nota', 0.0)] for codigo, info in turma_dict.items()]
-print(turma_lista)
+

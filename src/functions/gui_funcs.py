@@ -108,3 +108,24 @@ def valida_senha(senha):
         return False
     return True
 
+def valida_data(data:str) -> bool:
+    valido = False
+    meses_dias = {"01": 31, "02": 28, "03": 31, "04": 30, "05": 31, "06": 30,
+                  "07": 31, "08": 31, "09": 30, "10": 31, "11": 30, "12": 31}
+    try:
+        dia = data[0] + data[1]
+        mes = data[3] + data[4]
+        ano = data[6] + data[7] + data[8] + data[9]
+        if not dia.isnumeric() or not mes.isnumeric() or not ano.isnumeric():
+            raise ValueError
+    except Exception:
+        return False
+
+    if mes in meses_dias:
+        if int(dia) <= meses_dias[mes]:
+            valido = True
+
+    if data[2] == "/" and data[5] == "/":
+        valido = True
+    else: valido = False
+    return valido

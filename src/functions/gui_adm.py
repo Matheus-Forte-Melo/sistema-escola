@@ -32,19 +32,66 @@ def menu_gerenciar_alunos(adm):
                 break
 
 def matricular_estudante(adm):
-    # Validar esses dados, de forma mais organizada, em pequenos blocos de codigo para ficar mais legível
-    nomes_responsáveis = []
-    for i in range(2):
-        nomes_responsáveis.append(input_text(f"Insira o nome do {i+1}° responsável"))
-    nome_completo = input_text("Insira o nome completo", autocomplete=False)
-    senha = input_text("Insira a senha inicial do estudante:")
-    assert len(nome_completo) > 0, "Não deixe o nome nulo!"
-    data_nascimento = input_text("Insira a data de nascimento: ") 
-    data_atual = getDataTempo()
-    data_atual = data_atual['dia']
+    while True:
+        try:
+            nome_completo_aluno = input_text("Insira o nome completo", autocomplete=False) # Falta a validação se tem sobrenome ou não, nos responsáveis também
+            senha = input_text("Insira a senha inicial do estudante:")
 
+            if nome_completo_aluno == "" or len(senha) < 8 or len(senha) > 20:
+                raise ValueError("[!] Certifique-se de inserir um nome válido e uma senha com tamanho entre 8 a 20.")
+            break
+        except ValueError as e:
+            print(e)
+
+    data_nascimento = input_data_nascimento()            
+    data_nascimento = datetime.strptime(data_nascimento, "%d/%m/%Y")
+    nome_aluno = separa_nome_sobrenome(nome_completo_aluno) # Precisa de validação ainda
     
-    nome_aluno = separa_nome_sobrenome(nome_completo)
-    # Pensando em separar métodos dos professores dos admiistradores em gui_adm e gui_prof, vejo isso dps
     acao = input_select("Deseja: ", ["Atribuir à novos responsáveis", "Atribuir à responsáveis existentes"])
-    novo_aluno = Aluno(nome_aluno[0], nome_aluno[1], data_nascimento)
+    match acao:
+        case "Atribuir à novos responsáveis":
+            responsaveis = input_responsáveis() # Precisa de validação também
+        case "Atribuir à responsáveis existentes":
+            pass
+
+    turma = input_turma()
+    novo_aluno = Aluno(nome_aluno[0], nome_aluno[1], data_nascimento, turma)
+
+def input_responsáveis():
+    while True:
+        nomes_responsáveis = []
+        try:
+            nomes_responsáveis.append(input_text(f"Insira o nome do 1° responsável [OBRIGATÓRIO]"))
+            nomes_responsáveis.append(input_text(f"Insira o nome do 2° responsável [FACULTATIVO]"))
+            
+            if nomes_responsáveis[0] == "": # Tem que garantir que tem um sobrenome também
+                raise ValueError("[!] O primeiro responsável precisa ser válido.")
+            break
+        except ValueError as e:
+            print(e)
+    
+    return nomes_responsáveis
+
+def input_data_nascimento():
+        while True:
+            try:
+                data_nascimento = input_text("Insira a data de nascimento [DIA/MES/ANO]: ")
+                if not valida_data(data_nascimento):
+                    raise ValueError
+                break
+            except ValueError:
+                print("[!] Insira uma data válida!")
+        
+        return data_nascimento
+
+def input_turma():
+    turmas = Turma().buscar_todas_turmas() 
+    turmas_escolha = {}
+
+    for turma in turmas:
+        turmas_escolha[turma[1]] = None
+    turma_selecionada = input_text("Escolha a turma", autocomplete=turmas_escolha)
+
+    for turma in turmas:
+        if turma[1] == turma_selecionada:
+            return turma[0]   
