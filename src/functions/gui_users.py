@@ -2,6 +2,7 @@
 from sys import path
 path.append("src"), path.append("src\\classes")
 
+from classes.Responsaveis import Responsaveis
 from classes.Nota import Notas
 from classes.Aluno import Aluno
 from classes.Professor import Professor 

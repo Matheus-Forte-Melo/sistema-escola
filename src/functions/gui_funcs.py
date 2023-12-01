@@ -109,7 +109,6 @@ def valida_senha(senha):
     return True
 
 def valida_data(data:str) -> bool:
-    valido = False
     meses_dias = {"01": 31, "02": 28, "03": 31, "04": 30, "05": 31, "06": 30,
                   "07": 31, "08": 31, "09": 30, "10": 31, "11": 30, "12": 31}
     try:
@@ -120,12 +119,19 @@ def valida_data(data:str) -> bool:
             raise ValueError
     except Exception:
         return False
+    
+    if int(ano) > date.today().year:
+        return False
 
     if mes in meses_dias:
         if int(dia) <= meses_dias[mes]:
-            valido = True
+            pass
+        else:
+            return False
 
-    if data[2] == "/" and data[5] == "/":
-        valido = True
-    else: valido = False
-    return valido
+    if data[2] != "/" or data[5] != "/":
+        return False
+    
+    return True
+
+print(valida_data("01/12/2023"))

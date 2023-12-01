@@ -1,4 +1,5 @@
 from UsuarioDB import UsuarioDB
+from Aluno import Aluno
 
 class Administrador(UsuarioDB):
     def __init__(self):
@@ -17,15 +18,14 @@ class Administrador(UsuarioDB):
         if completo:
             return f"{self.primeiro_nome} {self.sobrenome}"
         return self.primeiro_nome
-    
-    def cadastrar_responsaveis(self):
-        pass
 
     def matricular_estudante(self, aluno): # Aluno ----> vai receber Instância de aluno
-        query = "matricular_aluno(%s, %s, %s, %s, %s, %s)"
-        #values = (aluno.get)
-
-
+        query = "CALL matricular_aluno(%s, %s, %s, %s, %s, %s)"
+        values = (aluno.getNome(), aluno.getSobrenome(), aluno.getDataNascimento(), aluno.getTurma(), aluno.getResponsaveis(), aluno._senha)
+        self._iniciarConn()
+        self._cursor.execute(query, values)
+        self._conn.commit()
+        self._fecharConn()
          
 
 

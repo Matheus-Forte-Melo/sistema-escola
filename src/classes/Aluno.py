@@ -3,12 +3,13 @@
 from UsuarioDB import UsuarioDB
 
 class Aluno(UsuarioDB): # Herdando métodos de comunicação
-    def __init__(self, primeiro_nome="", sobrenome="", nascimento="", turma=0, responsaveis=0) -> None:
-        self.primeiro_nome = primeiro_nome 
-        self.sobrenome = sobrenome
-        self.nascimento = nascimento
-        self.turma = turma
-        self.responsaveis = responsaveis
+    def __init__(self, primeiro_nome="", sobrenome="", nascimento="", turma=0, responsaveis=0, senha="") -> None:
+        self.__primeiro_nome = primeiro_nome 
+        self.__sobrenome = sobrenome
+        self.__nascimento = nascimento
+        self.__turma = turma
+        self.__responsaveis = responsaveis
+        self._senha = senha
 
     # Retorna uma tupla com os atributos referentes ao registro do banco com a senha correspondente
     def realizarLogin(self, nome, senha):
@@ -48,7 +49,14 @@ class Aluno(UsuarioDB): # Herdando métodos de comunicação
             return f"{self.__primeiro_nome} {self.__sobrenome}"
         return self.__primeiro_nome
     
+    def getSobrenome(self):
+        return self.__sobrenome
+    
+    def getDataNascimento(self):
+        return self.__nascimento
+
     def getNascimento(self):
         return self.__nascimento
 
+    #property senha?
     
