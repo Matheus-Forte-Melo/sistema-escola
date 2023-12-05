@@ -15,16 +15,30 @@ def menu_administrador():
                 menu_gerenciar_alunos(adm)                
             case "Sair do Sistema":
                 break
-    
+
+def menu_gerenciar_turmas(adm=""):
+    escolhas = ["Selecionar turma", "Criar nova turma", Separator(), "Voltar"]
+    while True:
+        acao = input_select("O que deseja fazer:", escolhas)
+
+        match acao:
+            case "Selecionar turma":
+                pass     
+            case "Criar nova turma":
+                pass
+            case "Voltar":
+                break
+
+menu_gerenciar_turmas()
+
 def menu_gerenciar_alunos(adm):
-    escolhas = ["Matricular Estudante", "Buscar/Editar Estudante", "Voltar"]
+    escolhas = ["Matricular Estudante", "Buscar/Editar Estudante", Separator(), "Voltar"]
     while True:
         acao = input_select("O que deseja fazer: ", escolhas)
 
         match acao:
             case "Matricular Estudante":
                 matricular_estudante(adm)
-                pass     
             case "Buscar/Editar Estudante":
                 #buscar_aluno
                 pass
@@ -55,7 +69,7 @@ def matricular_estudante(adm):
     acao = input_select("Deseja: ", ["Atribuir à novos responsáveis", "Atribuir à responsáveis existentes"])
     match acao:
         case "Atribuir à novos responsáveis":
-            responsaveis = input_responsáveis() # Precisa de validação também
+            responsaveis = input_responsáveis()
         case "Atribuir à responsáveis existentes":
             responsaveis = atribui_resposáveis()
 
@@ -68,18 +82,16 @@ def atribui_resposáveis():
     responsaveis = Responsaveis().buscar_todos()
     
     for responsavel in responsaveis:
-            responsaveis_escolha[f"{responsavel[0]} - {responsavel[1]}"] = None
+            responsaveis_escolha[f"{responsavel[0]} - {responsavel[1]} (ID:{responsavel[2]})"] = None
 
     while True:
         responsaveis_selecionados = input_text("Digite o nome do responsável principal: ", autocomplete=responsaveis_escolha)
 
         for responsavel in responsaveis:
-            if f"{responsavel[0]} - {responsavel[1]}" == responsaveis_selecionados:
-                return f"{responsavel[0]} - {responsavel[1]}"   
-            else: 
-                print("[!] Responsáveis não encontrados, certifique-se de usar o AUTOCOMPLETE.")
-
-print(atribui_resposáveis())
+            if f"{responsavel[0]} - {responsavel[1]} (ID:{responsavel[2]})" == responsaveis_selecionados:
+                return responsavel[2]
+            
+        print("[!] Responsáveis não encontrados, certifique-se de usar o AUTOCOMPLETE.")
 
 def input_responsáveis(): # Retorna o ID do responsável criado
     while True:
@@ -115,7 +127,7 @@ def input_data_nascimento():
         
         return data_nascimento
 
-def input_turma():
+def input_turma(): # Isso aqui foje da norma de UX la que diz que tudo tem q ser padronizado, mas fodase
     turmas = Turma().buscar_todas_turmas() 
     turmas_escolha = {}
 
@@ -128,6 +140,6 @@ def input_turma():
         for turma in turmas:
             if turma[1] == turma_selecionada:
                 return turma[0]   
-            else: 
-                print("[!] Turma não encontrada, certifique-se de usar o AUTOCOMPLETE.")
+            
+        print("[!] Turma não encontrada, certifique-se de usar o AUTOCOMPLETE.")
             
