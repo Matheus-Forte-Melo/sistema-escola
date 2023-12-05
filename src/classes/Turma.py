@@ -25,3 +25,4 @@ class Turma(EntidadeDB):
         values = (valor,)
         return self.realizarBusca(query, values)
 
+

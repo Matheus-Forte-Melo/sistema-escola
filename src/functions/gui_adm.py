@@ -57,11 +57,29 @@ def matricular_estudante(adm):
         case "Atribuir à novos responsáveis":
             responsaveis = input_responsáveis() # Precisa de validação também
         case "Atribuir à responsáveis existentes":
-            pass
+            responsaveis = atribui_resposáveis()
 
     turma = input_turma()
     novo_aluno = Aluno(nome_aluno[0], nome_aluno[1], data_nascimento, turma, responsaveis, senha)
     adm.matricular_estudante(novo_aluno)
+
+def atribui_resposáveis():
+    responsaveis_escolha = {}
+    responsaveis = Responsaveis().buscar_todos()
+    
+    for responsavel in responsaveis:
+            responsaveis_escolha[f"{responsavel[0]} - {responsavel[1]}"] = None
+
+    while True:
+        responsaveis_selecionados = input_text("Digite o nome do responsável principal: ", autocomplete=responsaveis_escolha)
+
+        for responsavel in responsaveis:
+            if f"{responsavel[0]} - {responsavel[1]}" == responsaveis_selecionados:
+                return f"{responsavel[0]} - {responsavel[1]}"   
+            else: 
+                print("[!] Responsáveis não encontrados, certifique-se de usar o AUTOCOMPLETE.")
+
+print(atribui_resposáveis())
 
 def input_responsáveis(): # Retorna o ID do responsável criado
     while True:
@@ -101,9 +119,10 @@ def input_turma():
     turmas = Turma().buscar_todas_turmas() 
     turmas_escolha = {}
 
-    while True:
-        for turma in turmas:
+    for turma in turmas:
             turmas_escolha[turma[1]] = None
+
+    while True: # Isso aqui pode ser otimizado, vou deixar assim por enquanto, lá em cima tem outra parada q usa uma função igual (input_responsavel, o primeiro)
         turma_selecionada = input_text("Escolha a turma", autocomplete=turmas_escolha)
 
         for turma in turmas:

@@ -26,6 +26,19 @@ class Administrador(UsuarioDB):
         self._cursor.execute(query, values)
         self._conn.commit()
         self._fecharConn()
+
+    def transferir_estudante(self, aluno, turma):
+        pass
+
+
+    # def criar_turma(self, turma):
+    #     pass
+
+    # def editar_turma(self, turma):
+    #     pass
+
+    # def deletar_turma(self, turma):
+    #     pass
          
 
 

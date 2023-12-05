@@ -1,7 +1,7 @@
 from EntidadeDB import EntidadeDB
 
 class Responsaveis(EntidadeDB):
-    def __init__(self, primeiro_nome_1, sobrenome_1, primeiro_nome_2, sobrenome_2):
+    def __init__(self, primeiro_nome_1="", sobrenome_1="", primeiro_nome_2="", sobrenome_2=""):
         self.primeiro_nome_1 = primeiro_nome_1
         self.sobrenome_1 = sobrenome_1
         self.primeiro_nome_2 = primeiro_nome_2
@@ -17,3 +17,9 @@ class Responsaveis(EntidadeDB):
         self._fecharConn()
         return id_responsavel[0][0]
     
+    def buscar_todos(self):
+        query = "CALL buscar_responsáveis"
+        values = ()
+        return self.realizarBusca(query, values)
+
+

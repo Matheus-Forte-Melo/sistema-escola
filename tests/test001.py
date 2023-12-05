@@ -11,7 +11,6 @@ from src.functions.gui_users import input_text
 adm = Administrador().realizarLogin(nome="Nivaldo Rosbevino", senha="lgbtq12345")
 gui_adm.matricular_estudante(adm)
 
-     
 
 
 

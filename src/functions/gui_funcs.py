@@ -134,4 +134,3 @@ def valida_data(data:str) -> bool:
     
     return True
 
-print(valida_data("01/12/2023"))
